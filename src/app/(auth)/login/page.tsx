@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
+import { LoginAnimatedBackground } from "@/components/auth/LoginAnimatedBackground";
 import { ThemeSelector } from "@/components/ui/theme-selector";
 import { useTheme } from "@/lib/theme-context";
 import type { Branch } from "@/lib/session";
@@ -137,7 +138,9 @@ function LoginInner() {
 
   return (
     <main className="premium-page-bg relative flex min-h-screen items-center justify-center p-4 text-text-primary md:p-6">
-      <div className="grid w-full max-w-[860px] gap-3.5 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <LoginAnimatedBackground />
+
+      <div className="relative z-10 grid w-full max-w-[860px] gap-3.5 lg:grid-cols-[minmax(0,1fr)_360px]">
         <section className="relative flex min-h-[520px] flex-col justify-between overflow-hidden rounded-lg bg-accent px-8 py-9 text-text-on-accent shadow-lift md:px-10">
           <div className="pointer-events-none absolute -right-20 -top-20 h-[280px] w-[280px] rounded-pill border border-chart-2/25" />
           <div className="pointer-events-none absolute -bottom-24 -left-12 h-[260px] w-[260px] rounded-pill bg-white/5" />
@@ -189,8 +192,8 @@ function LoginInner() {
           </div>
         </section>
 
-        <section className="flex items-center">
-          <div className="w-full rounded-lg bg-surface px-8 py-10 shadow-micro md:px-9">
+        <section className="flex min-h-[520px] items-stretch">
+          <div className="flex min-h-[520px] w-full flex-col justify-center rounded-lg bg-surface px-8 py-10 shadow-micro md:px-9">
             {step === "credentials" ? (
               <form onSubmit={submitCredentials} className="space-y-5">
                 <div>

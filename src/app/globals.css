@@ -1036,6 +1036,70 @@ select {
       inset 4px 4px 8px rgba(213, 201, 184, 0.88),
       inset -4px -4px 8px rgba(255, 255, 255, 0.95);
   }
+
+  .login-animated-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-surface) 54%, var(--color-bg)) 0%,
+        color-mix(in srgb, var(--login-bg-0) 82%, var(--color-surface)) 58%,
+        color-mix(in srgb, var(--login-bg-2) 12%, var(--color-bg)) 100%
+      ),
+      var(--color-bg);
+  }
+
+  .login-animated-bg__canvas,
+  .login-animated-bg__wash {
+    position: absolute;
+    inset: 0;
+  }
+
+  .login-animated-bg__canvas {
+    height: 100%;
+    width: 100%;
+  }
+
+  .login-animated-bg__wash {
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-surface) 72%, transparent) 0%,
+        color-mix(in srgb, var(--color-surface) 46%, transparent) 35%,
+        transparent 72%
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--login-bg-2) 8%, transparent) 0%,
+        transparent 22%,
+        transparent 78%,
+        color-mix(in srgb, var(--login-bg-1) 8%, transparent) 100%
+      );
+  }
+
+  .login-animated-bg__wash::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        ellipse at 50% 100%,
+        color-mix(in srgb, var(--login-bg-2) 24%, transparent) 0%,
+        color-mix(in srgb, var(--login-bg-2) 10%, transparent) 26%,
+        transparent 60%
+      ),
+      linear-gradient(
+        180deg,
+        transparent 0%,
+        transparent 54%,
+        color-mix(in srgb, var(--login-bg-2) 12%, transparent) 100%
+      );
+    opacity: 0.72;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
