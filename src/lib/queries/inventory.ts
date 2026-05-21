@@ -18,20 +18,6 @@ export type InventoryMenu = {
   movement: "in" | "out" | "neutral" | "mixed";
 };
 
-export type InventorySummary = {
-  total_items: number;
-  stock_items: number;
-  stock_qty: number;
-  stock_value: number;
-  negative_items: number;
-  current_docs: number;
-  qty_in: number;
-  qty_out: number;
-  open_requests: number;
-  adjust_docs: number;
-  transfer_docs: number;
-};
-
 export type InventoryDocument = {
   menu_label: string;
   doc_no: string;
@@ -62,8 +48,6 @@ export type InventoryDashboardData = {
   period: InventoryPeriod;
   company_name: string;
   selected_menu: InventoryMenu;
-  menus: InventoryMenu[];
-  summary: InventorySummary;
   documents: InventoryDocument[];
   filters: {
     menu: string;
@@ -78,20 +62,6 @@ export type InventoryQueryInput = {
   search?: string;
   startDate?: string;
   endDate?: string;
-};
-
-type SummaryRow = {
-  total_items: Numeric;
-  stock_items: Numeric;
-  stock_qty: Numeric;
-  stock_value: Numeric;
-  negative_items: Numeric;
-  current_docs: Numeric;
-  qty_in: Numeric;
-  qty_out: Numeric;
-  open_requests: Numeric;
-  adjust_docs: Numeric;
-  transfer_docs: Numeric;
 };
 
 const INTERNAL_DOCUMENT_FLAGS = [
@@ -190,7 +160,7 @@ export const inventoryMenus: InventoryMenu[] = [
   },
   {
     id: "adjust-plus",
-    label: "ปรับปรุงสต็อกสินค้า/วัตถุดิบ",
+    label: "ปรับปรุงสต็อกสินค้า/วัตถุดิบ (เพิ่ม)",
     erp_menu: "menu_ic_stk_adjust",
     flags: [66],
     group: "สินค้า",
@@ -198,7 +168,7 @@ export const inventoryMenus: InventoryMenu[] = [
   },
   {
     id: "adjust-minus",
-    label: "ปรับปรุงสต็อกสินค้า/วัตถุดิบ (ขาด)",
+    label: "ปรับปรุงสต็อกสินค้า/วัตถุดิบ (ลด)",
     erp_menu: "menu_ic_stk_adjust_subtract",
     flags: [68],
     group: "สินค้า",
@@ -333,106 +303,6 @@ async function getCompanyName(providerCode: string, databaseName: string) {
     "SELECT company_name_1 FROM erp_company_profile LIMIT 1"
   );
   return rows[0]?.company_name_1?.trim() || databaseName.toUpperCase();
-}
-
-async function getSummary(
-  providerCode: string,
-  databaseName: string,
-  period: InventoryPeriod
-): Promise<InventorySummary> {
-  const rows = await queryProviderDatabase<SummaryRow>(
-    providerCode,
-    databaseName,
-    `
-      WITH stock_summary AS (
-        SELECT
-          COUNT(*)::int AS total_items,
-          COUNT(*) FILTER (WHERE COALESCE(balance_qty, 0) <> 0)::int AS stock_items,
-          COALESCE(SUM(balance_qty), 0) AS stock_qty,
-          COALESCE(SUM(COALESCE(balance_qty, 0) * COALESCE(average_cost, 0)), 0) AS stock_value,
-          COUNT(*) FILTER (WHERE COALESCE(balance_qty, 0) < 0)::int AS negative_items
-        FROM ic_inventory
-      ),
-      period_movement AS (
-        SELECT
-          COUNT(DISTINCT (t.trans_flag, t.doc_no, t.doc_date))::int AS current_docs,
-          COALESCE(SUM(GREATEST(
-            COALESCE(d.calc_flag, 0)
-            * COALESCE(d.qty, 0)
-            * (COALESCE(d.stand_value, 1) / COALESCE(NULLIF(d.divide_value, 0), 1)),
-            0
-          )), 0) AS qty_in,
-          COALESCE(SUM(ABS(LEAST(
-            COALESCE(d.calc_flag, 0)
-            * COALESCE(d.qty, 0)
-            * (COALESCE(d.stand_value, 1) / COALESCE(NULLIF(d.divide_value, 0), 1)),
-            0
-          ))), 0) AS qty_out
-        FROM ic_trans t
-        JOIN ic_trans_detail d
-          ON d.trans_flag = t.trans_flag
-          AND d.doc_no = t.doc_no
-          AND d.doc_date = t.doc_date
-        WHERE t.trans_flag = ANY($1::int[])
-          AND t.last_status = 0
-          AND COALESCE(d.last_status, 0) = 0
-          AND COALESCE(d.item_type, 0) <> 5
-          AND t.doc_date >= $2::date
-          AND t.doc_date < $3::date
-      ),
-      open_requests AS (
-        SELECT COUNT(*)::int AS open_requests
-        FROM ic_trans
-        WHERE trans_flag IN (122, 124)
-          AND last_status = 0
-          AND COALESCE(doc_success, 0) = 0
-      ),
-      period_docs AS (
-        SELECT
-          COUNT(*) FILTER (WHERE trans_flag IN (66, 68, 509))::int AS adjust_docs,
-          COUNT(*) FILTER (WHERE trans_flag IN (70, 72, 124))::int AS transfer_docs
-        FROM ic_trans
-        WHERE trans_flag = ANY($4::int[])
-          AND last_status = 0
-          AND doc_date >= $2::date
-          AND doc_date < $3::date
-      )
-      SELECT
-        stock_summary.total_items,
-        stock_summary.stock_items,
-        stock_summary.stock_qty,
-        stock_summary.stock_value,
-        stock_summary.negative_items,
-        COALESCE(period_movement.current_docs, 0) AS current_docs,
-        COALESCE(period_movement.qty_in, 0) AS qty_in,
-        COALESCE(period_movement.qty_out, 0) AS qty_out,
-        COALESCE(open_requests.open_requests, 0) AS open_requests,
-        COALESCE(period_docs.adjust_docs, 0) AS adjust_docs,
-        COALESCE(period_docs.transfer_docs, 0) AS transfer_docs
-      FROM stock_summary, period_movement, open_requests, period_docs
-    `,
-    [
-      INTERNAL_DOCUMENT_FLAGS,
-      period.start_date,
-      period.end_exclusive,
-      INTERNAL_DOCUMENT_FLAGS
-    ]
-  );
-
-  const row = rows[0];
-  return {
-    total_items: numberValue(row?.total_items),
-    stock_items: numberValue(row?.stock_items),
-    stock_qty: numberValue(row?.stock_qty),
-    stock_value: numberValue(row?.stock_value),
-    negative_items: numberValue(row?.negative_items),
-    current_docs: numberValue(row?.current_docs),
-    qty_in: numberValue(row?.qty_in),
-    qty_out: numberValue(row?.qty_out),
-    open_requests: numberValue(row?.open_requests),
-    adjust_docs: numberValue(row?.adjust_docs),
-    transfer_docs: numberValue(row?.transfer_docs)
-  };
 }
 
 function menuLabelByFlag(flag: number) {
@@ -584,13 +454,8 @@ export async function getInventoryDashboard(
   const menu = selectedMenu(input.menu);
   const search = input.search?.trim() ?? "";
 
-  const [
-    companyName,
-    summary,
-    documents
-  ] = await Promise.all([
+  const [companyName, documents] = await Promise.all([
     getCompanyName(providerCode, databaseName),
-    getSummary(providerCode, databaseName, period),
     getDocuments(providerCode, databaseName, period, menu, search)
   ]);
 
@@ -598,8 +463,6 @@ export async function getInventoryDashboard(
     period,
     company_name: companyName,
     selected_menu: menu,
-    menus: inventoryMenus,
-    summary,
     documents,
     filters: {
       menu: menu.id,

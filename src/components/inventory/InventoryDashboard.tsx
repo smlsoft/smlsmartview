@@ -1,25 +1,17 @@
 import {
-  Activity,
-  AlertTriangle,
-  Boxes,
   CalendarDays,
   CheckCircle2,
-  Filter,
-  Package,
-  PackageCheck,
-  Search,
+  Search
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import { StatusChip } from "@/components/ui/status-chip";
 import type {
   InventoryDashboardData,
   InventoryDocument,
-  InventoryMenu,
+  InventoryMenu
 } from "@/lib/queries/inventory";
-import { cn } from "@/lib/utils";
 
 type InventoryDashboardProps = {
   data: InventoryDashboardData;
@@ -62,74 +54,14 @@ function movementVariant(menu: InventoryMenu) {
   return "info" as const;
 }
 
-function KpiCard({
-  label,
-  value,
-  sub,
-  icon: Icon,
-  tone = "neutral"
-}: {
-  label: string;
-  value: string;
-  sub: string;
-  icon: typeof Package;
-  tone?: "neutral" | "success" | "warning" | "danger" | "info";
-}) {
-  const toneClass = {
-    neutral: "text-text-primary",
-    success: "text-success",
-    warning: "text-warning",
-    danger: "text-danger",
-    info: "text-info"
-  }[tone];
-
-  return (
-    <Card className="min-w-0 p-5">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0">
-        <p className="label-caps text-text-tertiary">{label}</p>
-        <Icon className="h-4 w-4 text-text-tertiary" aria-hidden="true" />
-      </CardHeader>
-      <CardContent className="p-0 pt-4">
-        <p
-          className={cn(
-            "truncate text-3xl font-semibold leading-none tabular-nums",
-            toneClass
-          )}
-          title={value}
-        >
-          {value}
-        </p>
-        <p className="mt-2 text-sm leading-5 text-text-secondary">{sub}</p>
-      </CardContent>
-    </Card>
-  );
-}
-
 function FilterBar({ data }: { data: InventoryDashboardData }) {
   return (
     <Card className="p-4">
       <form
         action="/inventory"
-        className="grid gap-3 md:grid-cols-[minmax(220px,1.4fr)_150px_150px_minmax(190px,1fr)_auto]"
+        className="grid gap-3 md:grid-cols-[150px_150px_minmax(220px,1fr)_auto]"
       >
-        <div className="relative min-w-0">
-          <Filter
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-tertiary"
-            aria-hidden="true"
-          />
-          <Select
-            name="menu"
-            defaultValue={data.filters.menu}
-            className="h-11 pl-9"
-            aria-label="เลือกเมนูเอกสาร"
-          >
-            {data.menus.map((menu) => (
-              <option key={menu.id} value={menu.id}>
-                {menu.label}
-              </option>
-            ))}
-          </Select>
-        </div>
+        <input type="hidden" name="menu" value={data.filters.menu} />
         <div className="relative">
           <CalendarDays
             className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-tertiary"
@@ -175,41 +107,6 @@ function FilterBar({ data }: { data: InventoryDashboardData }) {
         </Button>
       </form>
     </Card>
-  );
-}
-
-function OverviewGrid({ data }: { data: InventoryDashboardData }) {
-  const summary = data.summary;
-  return (
-    <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      <KpiCard
-        label="มูลค่าสต็อก"
-        value={formatCompact(summary.stock_value)}
-        sub={`${formatNumber(summary.stock_items)} SKU มีคงเหลือ`}
-        icon={PackageCheck}
-        tone="info"
-      />
-      <KpiCard
-        label="จำนวนคงเหลือ"
-        value={formatCompact(summary.stock_qty)}
-        sub={`${formatNumber(summary.total_items)} รหัสสินค้าใน master`}
-        icon={Boxes}
-      />
-      <KpiCard
-        label="เคลื่อนไหวเดือนนี้"
-        value={formatNumber(summary.current_docs)}
-        sub={`เข้า ${formatCompact(summary.qty_in)} · ออก ${formatCompact(summary.qty_out)}`}
-        icon={Activity}
-        tone="success"
-      />
-      <KpiCard
-        label="จุดเสี่ยง"
-        value={formatNumber(summary.negative_items)}
-        sub={`คำขอค้าง ${formatNumber(summary.open_requests)} · ปรับปรุง ${formatNumber(summary.adjust_docs)}`}
-        icon={AlertTriangle}
-        tone={summary.negative_items > 0 ? "danger" : "success"}
-      />
-    </section>
   );
 }
 
@@ -351,7 +248,6 @@ export function InventoryDashboard({ data }: InventoryDashboardProps) {
         </div>
       </section>
 
-      <OverviewGrid data={data} />
       <FilterBar data={data} />
 
       <DocumentsTable data={data} />
