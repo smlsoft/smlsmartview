@@ -11,7 +11,10 @@ RUN corepack enable && corepack prepare pnpm@9 --activate
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN pnpm build
+# Dummy secret satisfies build-time validation; real secret is injected at runtime via env
+ARG SESSION_SECRET=build-time-placeholder-not-used-at-runtime-xxxxxxxxxx
+ENV SESSION_SECRET=$SESSION_SECRET
+RUN pnpm build && mkdir -p public
 
 # Stage 3: Production runtime
 FROM node:22-alpine AS runner
