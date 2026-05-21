@@ -1,0 +1,14 @@
+.next/
+node_modules/
+.claude/
+.codex/
+.git/
+.gitignore
+*.log
+*.md
+.env
+.env.local
+.env.development.local
+.env.test.local
+design-preview.html
+tsconfig.tsbuildinfo
