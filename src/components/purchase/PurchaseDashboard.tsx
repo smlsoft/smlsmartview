@@ -1,20 +1,14 @@
-import {
-  CalendarDays,
-  Search
-} from "lucide-react";
+import { CalendarDays, Search, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { DocumentStatusChips } from "@/components/erp/DocumentStatusChips";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { StatusChip } from "@/components/ui/status-chip";
-import type {
-  InventoryDashboardData,
-  InventoryMenu
-} from "@/lib/queries/inventory";
+import type { PurchaseDashboardData, PurchaseMenu } from "@/lib/queries/purchase";
 
-type InventoryDashboardProps = {
-  data: InventoryDashboardData;
+type PurchaseDashboardProps = {
+  data: PurchaseDashboardData;
 };
 
 function formatNumber(value: number, digits = 0) {
@@ -32,6 +26,7 @@ function formatCompact(value: number) {
 
 function formatDate(date: string) {
   const value = date.slice(0, 10);
+  if (!value) return "-";
   return new Intl.DateTimeFormat("th-TH", {
     year: "numeric",
     month: "short",
@@ -40,21 +35,17 @@ function formatDate(date: string) {
   }).format(new Date(`${value}T00:00:00+07:00`));
 }
 
-function movementLabel(menu: InventoryMenu) {
-  if (menu.movement === "in") return "เข้า";
-  if (menu.movement === "out") return "ออก";
-  if (menu.movement === "neutral") return "ไม่ตัดสต็อก";
-  return "ผสม";
+function stageVariant(stage: PurchaseMenu["stage"]) {
+  if (stage === "เงินล่วงหน้า" || stage === "เงินมัดจำ") return "warning" as const;
+  if (stage === "ซื้อ/ตั้งหนี้") return "success" as const;
+  if (stage === "พาเชียล") return "info" as const;
+  return "neutral" as const;
 }
 
-function movementVariant(menu: InventoryMenu) {
-  if (menu.movement === "in") return "success" as const;
-  if (menu.movement === "out") return "warning" as const;
-  if (menu.movement === "neutral") return "neutral" as const;
-  return "info" as const;
-}
-
-function documentDetailHref(data: InventoryDashboardData, doc: InventoryDashboardData["documents"][number]) {
+function documentDetailHref(
+  data: PurchaseDashboardData,
+  doc: PurchaseDashboardData["documents"][number]
+) {
   const params = new URLSearchParams({
     menu: data.filters.menu,
     flag: String(doc.trans_flag),
@@ -66,14 +57,14 @@ function documentDetailHref(data: InventoryDashboardData, doc: InventoryDashboar
   if (data.filters.end_date) params.set("to", data.filters.end_date);
   if (data.filters.search) params.set("q", data.filters.search);
 
-  return `/inventory/document?${params.toString()}`;
+  return `/purchase/document?${params.toString()}`;
 }
 
-function FilterBar({ data }: { data: InventoryDashboardData }) {
+function FilterBar({ data }: { data: PurchaseDashboardData }) {
   return (
     <Card className="p-4">
       <form
-        action="/inventory"
+        action="/purchase"
         className="grid gap-3 md:grid-cols-[150px_150px_minmax(220px,1fr)_auto]"
       >
         <input type="hidden" name="menu" value={data.filters.menu} />
@@ -111,9 +102,9 @@ function FilterBar({ data }: { data: InventoryDashboardData }) {
           <Input
             name="q"
             defaultValue={data.filters.search}
-            placeholder="เลขเอกสาร / สินค้า / หมายเหตุ"
+            placeholder="เลขเอกสาร / เจ้าหนี้ / สินค้า / อ้างอิง"
             className="h-11 pl-9"
-            aria-label="ค้นหาเอกสาร"
+            aria-label="ค้นหาเอกสารซื้อ"
           />
         </div>
         <Button type="submit" className="h-11">
@@ -125,15 +116,15 @@ function FilterBar({ data }: { data: InventoryDashboardData }) {
   );
 }
 
-function DocumentsTable({ data }: { data: InventoryDashboardData }) {
+function DocumentsTable({ data }: { data: PurchaseDashboardData }) {
   return (
     <Card className="overflow-hidden p-0">
       <CardHeader className="flex flex-col gap-3 p-6 pb-4 md:flex-row md:items-start md:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <CardTitle>{data.selected_menu.label}</CardTitle>
-            <StatusChip variant={movementVariant(data.selected_menu)}>
-              {movementLabel(data.selected_menu)}
+            <StatusChip variant={stageVariant(data.selected_menu.stage)}>
+              {data.selected_menu.stage}
             </StatusChip>
           </div>
           <p className="mt-2 text-sm text-text-secondary">
@@ -144,16 +135,16 @@ function DocumentsTable({ data }: { data: InventoryDashboardData }) {
       </CardHeader>
       <CardContent className="p-0">
         <div className="overflow-x-auto premium-scrollbar">
-          <table className="w-full min-w-[1040px] border-t border-border text-sm">
+          <table className="w-full min-w-[1120px] border-t border-border text-sm">
             <thead className="bg-surface-muted text-left">
               <tr className="label-caps text-text-tertiary">
                 <th className="px-5 py-3 font-semibold">เอกสาร</th>
                 <th className="px-5 py-3 font-semibold">วันที่</th>
+                <th className="px-5 py-3 font-semibold">เจ้าหนี้</th>
                 <th className="px-5 py-3 font-semibold">ประเภท</th>
-                <th className="px-5 py-3 font-semibold">ตัวอย่างสินค้า</th>
-                <th className="px-5 py-3 text-right font-semibold">จำนวน</th>
-                <th className="px-5 py-3 text-right font-semibold">มูลค่า</th>
-                <th className="px-5 py-3 font-semibold">คลัง</th>
+                <th className="px-5 py-3 font-semibold">ตัวอย่างรายการ</th>
+                <th className="px-5 py-3 text-right font-semibold">ยอดสุทธิ</th>
+                <th className="px-5 py-3 text-right font-semibold">คงเหลือ</th>
                 <th className="px-5 py-3 font-semibold">สถานะ</th>
               </tr>
             </thead>
@@ -175,7 +166,7 @@ function DocumentsTable({ data }: { data: InventoryDashboardData }) {
                         {doc.doc_no}
                       </Link>
                       <p className="mt-1 max-w-[220px] truncate text-xs text-text-tertiary">
-                        {doc.doc_ref || doc.remark || doc.cust_code || "-"}
+                        {doc.doc_ref || doc.remark || "-"}
                       </p>
                     </td>
                     <td className="px-5 py-4 align-top">
@@ -187,8 +178,16 @@ function DocumentsTable({ data }: { data: InventoryDashboardData }) {
                       </p>
                     </td>
                     <td className="px-5 py-4 align-top">
+                      <p className="line-clamp-2 max-w-[220px] leading-5 text-text-primary">
+                        {doc.supplier_name || "-"}
+                      </p>
+                      <p className="label-caps mt-1 truncate text-text-tertiary">
+                        {doc.supplier_code || "-"}
+                      </p>
+                    </td>
+                    <td className="px-5 py-4 align-top">
                       <p className="line-clamp-2 max-w-[190px] leading-5 text-text-primary">
-                        {doc.menu_label}
+                        {doc.flag_label}
                       </p>
                       <p className="label-caps mt-1 text-text-tertiary">
                         TF {doc.trans_flag}
@@ -196,32 +195,23 @@ function DocumentsTable({ data }: { data: InventoryDashboardData }) {
                     </td>
                     <td className="px-5 py-4 align-top">
                       <p className="line-clamp-2 max-w-[230px] leading-5 text-text-primary">
-                        {doc.sample_item_name || "-"}
+                        {doc.sample_item_name || doc.doc_ref || "-"}
                       </p>
                       <p className="label-caps mt-1 truncate text-text-tertiary">
-                        {doc.sample_item_code || `${formatNumber(doc.line_count)} lines`}
+                        {doc.sample_item_code ||
+                          `${formatNumber(doc.line_count + doc.debt_line_count)} lines`}
                       </p>
                     </td>
                     <td className="px-5 py-4 text-right align-top">
                       <p className="tabular-nums text-text-primary">
-                        {formatNumber(doc.item_qty, 2)}
+                        {formatCompact(doc.total_amount || doc.item_amount || doc.debt_amount)}
                       </p>
                       <p className="mt-1 text-xs text-text-tertiary">
-                        {formatNumber(doc.line_count)} lines
+                        {formatNumber(doc.line_count)} item / {formatNumber(doc.debt_line_count)} ap
                       </p>
                     </td>
-                    <td className="px-5 py-4 text-right align-top">
-                      <p className="tabular-nums text-text-primary">
-                        {formatCompact(doc.item_amount || doc.total_amount)}
-                      </p>
-                      <p className="mt-1 text-xs tabular-nums text-text-tertiary">
-                        cost {formatCompact(doc.item_cost || doc.total_cost)}
-                      </p>
-                    </td>
-                    <td className="px-5 py-4 align-top">
-                      <p className="max-w-[130px] truncate text-text-secondary">
-                        {doc.warehouses || doc.branch_name || "-"}
-                      </p>
+                    <td className="px-5 py-4 text-right align-top tabular-nums text-text-secondary">
+                      {formatCompact(doc.balance_amount)}
                     </td>
                     <td className="px-5 py-4 align-top">
                       <DocumentStatusChips doc={doc} />
@@ -237,14 +227,14 @@ function DocumentsTable({ data }: { data: InventoryDashboardData }) {
   );
 }
 
-export function InventoryDashboard({ data }: InventoryDashboardProps) {
+export function PurchaseDashboard({ data }: PurchaseDashboardProps) {
   return (
     <div className="space-y-4">
       <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="label-caps text-text-tertiary">{data.company_name}</p>
           <h1 className="font-display mt-2 text-[34px] leading-[42px] tracking-normal text-text-primary">
-            ระบบสินค้า
+            ระบบซื้อ
           </h1>
           <p className="mt-3 text-sm text-text-secondary">
             ข้อมูลถึง {formatDate(data.period.as_of_date)} · ช่วงเอกสาร{" "}
@@ -252,8 +242,11 @@ export function InventoryDashboard({ data }: InventoryDashboardProps) {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <StatusChip variant="info">Inventory</StatusChip>
-          <StatusChip variant="neutral">Read only</StatusChip>
+          <StatusChip variant="info">
+            <ShoppingCart className="h-3.5 w-3.5" aria-hidden="true" />
+            Purchase
+          </StatusChip>
+          <StatusChip variant="neutral">อ่านอย่างเดียว</StatusChip>
         </div>
       </section>
 

@@ -88,8 +88,12 @@ export const sidebarNavGroups: SidebarNavGroup[] = [
     label: "ระบบสินค้า",
     icon: Package,
     items: [
-      pending("inventory-items", "รายการสินค้า", "/inventory/items"),
-      pending("inventory-sale-prices", "ราคาขายสินค้า", "/inventory/prices"),
+      item("inventory-items", "รายการสินค้า", "/inventory/items", {
+        enabled: true
+      }),
+      item("inventory-sale-prices", "ราคาขายสินค้า", "/inventory/prices", {
+        enabled: true
+      }),
       item(
         "inventory-opening",
         "สินค้า/วัตถุดิบ คงเหลือยกมา",
@@ -129,10 +133,11 @@ export const sidebarNavGroups: SidebarNavGroup[] = [
         "/inventory?menu=transfer-out",
         { enabled: true }
       ),
-      pending(
+      item(
         "inventory-request-stock-count",
         "ขอตรวจนับสินค้า",
-        "/inventory?menu=request-stock-count"
+        "/inventory?menu=stock-check-request",
+        { enabled: true }
       ),
       item(
         "inventory-stock-count",
@@ -159,57 +164,80 @@ export const sidebarNavGroups: SidebarNavGroup[] = [
     label: "ระบบซื้อ",
     icon: ShoppingCart,
     items: [
-      pending("purchase-quote", "ใบเสนอซื้อ", "/purchase?menu=quote"),
-      pending("purchase-order", "ใบสั่งซื้อ", "/purchase?menu=order"),
-      pending(
+      item("purchase-quote", "ใบเสนอซื้อ", "/purchase?menu=quote", {
+        enabled: true
+      }),
+      item("purchase-order", "ใบสั่งซื้อ", "/purchase?menu=order", {
+        enabled: true
+      }),
+      item(
         "purchase-advance-opening",
         "จ่ายเงินล่วงหน้ายกมา",
-        "/purchase?menu=advance-opening"
+        "/purchase?menu=advance-opening",
+        { enabled: true }
       ),
-      pending("purchase-advance", "จ่ายเงินล่วงหน้า", "/purchase?menu=advance"),
-      pending(
+      item("purchase-advance", "จ่ายเงินล่วงหน้า", "/purchase?menu=advance", {
+        enabled: true
+      }),
+      item(
         "purchase-advance-return",
         "รับคืนจ่ายเงินล่วงหน้า",
-        "/purchase?menu=advance-return"
+        "/purchase?menu=advance-return",
+        { enabled: true }
       ),
-      pending(
+      item(
         "purchase-deposit-opening",
         "จ่ายเงินมัดจำยกมา",
-        "/purchase?menu=deposit-opening"
+        "/purchase?menu=deposit-opening",
+        { enabled: true }
       ),
-      pending("purchase-deposit", "จ่ายเงินมัดจำ", "/purchase?menu=deposit"),
-      pending(
+      item("purchase-deposit", "จ่ายเงินมัดจำ", "/purchase?menu=deposit", {
+        enabled: true
+      }),
+      item(
         "purchase-deposit-return",
         "รับคืนจ่ายเงินมัดจำ",
-        "/purchase?menu=deposit-return"
+        "/purchase?menu=deposit-return",
+        { enabled: true }
       ),
-      pending("purchase-bill", "ซื้อสินค้า/ตั้งหนี้", "/purchase?menu=bill"),
-      pending("purchase-debit-note", "เพิ่มหนี้/ราคาผิด", "/purchase?menu=debit-note"),
-      pending("purchase-return", "ส่งคืนสินค้า/ราคาผิด", "/purchase?menu=return"),
-      pending(
+      item("purchase-bill", "ซื้อสินค้า/ตั้งหนี้", "/purchase?menu=bill", {
+        enabled: true
+      }),
+      item("purchase-debit-note", "เพิ่มหนี้/ราคาผิด", "/purchase?menu=debit-note", {
+        enabled: true
+      }),
+      item("purchase-return", "ส่งคืนสินค้า/ราคาผิด", "/purchase?menu=return", {
+        enabled: true
+      }),
+      item(
         "purchase-partial-receive",
         "รับสินค้าแบบทะยอยรับ",
-        "/purchase?menu=partial-receive"
+        "/purchase?menu=partial-receive",
+        { enabled: true }
       ),
-      pending(
+      item(
         "purchase-partial-return",
         "ส่งคืนสินค้าแบบทะยอยรับ",
-        "/purchase?menu=partial-return"
+        "/purchase?menu=partial-return",
+        { enabled: true }
       ),
-      pending(
+      item(
         "purchase-bill-from-receive",
         "ตั้งหนี้จากการรับสินค้า",
-        "/purchase?menu=bill-from-receive"
+        "/purchase?menu=bill-from-receive",
+        { enabled: true }
       ),
-      pending(
+      item(
         "purchase-debit-from-bill",
         "เพิ่มหนี้จากใบตั้งหนี้",
-        "/purchase?menu=debit-from-bill"
+        "/purchase?menu=debit-from-bill",
+        { enabled: true }
       ),
-      pending(
+      item(
         "purchase-credit-from-bill",
         "ลดหนี้จากใบตั้งหนี้",
-        "/purchase?menu=credit-from-bill"
+        "/purchase?menu=credit-from-bill",
+        { enabled: true }
       )
     ]
   },
@@ -218,46 +246,72 @@ export const sidebarNavGroups: SidebarNavGroup[] = [
     label: "ระบบขาย",
     icon: ReceiptText,
     items: [
-      pending("sales-quotation", "ใบเสนอราคา", "/sales?menu=quotation"),
-      pending("sales-reserve-order", "ใบสั่งซื้อ/สั่งจอง", "/sales?menu=reserve-order"),
-      pending("sales-order", "ใบสั่งขาย", "/sales?menu=order"),
-      pending(
+      item("sales-quotation", "ใบเสนอราคา", "/sales?menu=quotation", {
+        enabled: true
+      }),
+      item("sales-reserve-order", "ใบสั่งซื้อ/สั่งจอง", "/sales?menu=reserve-order", {
+        enabled: true
+      }),
+      item("sales-order", "ใบสั่งขาย", "/sales?menu=order", {
+        enabled: true
+      }),
+      item(
         "sales-advance-opening",
         "รับเงินล่วงหน้ายกมา",
-        "/sales?menu=advance-opening"
+        "/sales?menu=advance-opening",
+        { enabled: true }
       ),
-      pending("sales-advance", "รับเงินล่วงหน้า", "/sales?menu=advance"),
-      pending(
+      item("sales-advance", "รับเงินล่วงหน้า", "/sales?menu=advance", {
+        enabled: true
+      }),
+      item(
         "sales-advance-return",
         "คืนเงินรับล่วงหน้า",
-        "/sales?menu=advance-return"
+        "/sales?menu=advance-return",
+        { enabled: true }
       ),
-      pending(
+      item(
         "sales-deposit-opening",
         "รับเงินมัดจำล่วงหน้า",
-        "/sales?menu=deposit-opening"
+        "/sales?menu=deposit-opening",
+        { enabled: true }
       ),
-      pending("sales-deposit", "รับเงินมัดจำ", "/sales?menu=deposit"),
-      pending(
+      item("sales-deposit", "รับเงินมัดจำ", "/sales?menu=deposit", {
+        enabled: true
+      }),
+      item(
         "sales-deposit-return",
         "คืนเงินรับมัดจำ",
-        "/sales?menu=deposit-return"
+        "/sales?menu=deposit-return",
+        { enabled: true }
       ),
-      pending("sales-bill", "ขายสินค้า/บริการ", "/sales?menu=bill"),
-      pending("sales-return", "รับคืนสินค้า/ลดหนี้", "/sales?menu=return"),
-      pending("sales-debit-note", "เพิ่มหนี้", "/sales?menu=debit-note"),
-      pending(
+      item("sales-bill", "ขายสินค้า/บริการ", "/sales?menu=bill", {
+        enabled: true
+      }),
+      item("sales-return", "รับคืนสินค้า/ลดหนี้", "/sales?menu=return", {
+        enabled: true
+      }),
+      item("sales-debit-note", "เพิ่มหนี้", "/sales?menu=debit-note", {
+        enabled: true
+      }),
+      item(
         "sales-pos-tax-invoice-short",
         "รายการใบกำกับภาษีอย่างย่อ",
-        "/sales?menu=pos-tax-invoice-short"
+        "/sales?menu=pos-tax-invoice-short",
+        { enabled: true }
       ),
-      pending(
+      item(
         "sales-pos-tax-invoice-full",
         "รายการใบกำกับภาษีอย่างเต็มออกแทน",
-        "/sales?menu=pos-tax-invoice-full"
+        "/sales?menu=pos-tax-invoice-full",
+        { enabled: true }
       ),
-      pending("sales-change-money", "บันทึกรับเงิน (เงินทอน)", "/sales?menu=change-money"),
-      pending("sales-pos-shift-money", "บันทึกส่งเงิน POS", "/sales?menu=pos-shift-money")
+      item("sales-change-money", "บันทึกรับเงิน (เงินทอน)", "/sales?menu=change-money", {
+        enabled: true
+      }),
+      item("sales-pos-shift-money", "บันทึกส่งเงิน POS", "/sales?menu=pos-shift-money", {
+        enabled: true
+      })
     ]
   },
   {
@@ -265,15 +319,33 @@ export const sidebarNavGroups: SidebarNavGroup[] = [
     label: "ระบบเจ้าหนี้",
     icon: HandCoins,
     items: [
-      pending("ap-supplier", "ข้อมูลเจ้าหนี้", "/ap?menu=supplier"),
-      pending("ap-opening-debt", "ตั้งหนี้ยกมา (เจ้าหนี้)", "/ap?menu=opening-debt"),
-      pending("ap-opening-credit", "ลดหนี้ยกมา (เจ้าหนี้)", "/ap?menu=opening-credit"),
-      pending("ap-opening-debit", "เพิ่มหนี้ยกมา (เจ้าหนี้)", "/ap?menu=opening-debit"),
-      pending("ap-other-debt", "ตั้งหนี้อื่นๆ (เจ้าหนี้)", "/ap?menu=other-debt"),
-      pending("ap-other-credit", "ลดหนี้อื่นๆ (เจ้าหนี้)", "/ap?menu=other-credit"),
-      pending("ap-other-debit", "เพิ่มหนี้อื่นๆ (เจ้าหนี้)", "/ap?menu=other-debit"),
-      pending("ap-billing", "ใบรับวางบิล (เจ้าหนี้)", "/ap?menu=billing"),
-      pending("ap-payment", "จ่ายชำระหนี้ (เจ้าหนี้)", "/ap?menu=payment")
+      item("ap-supplier", "ข้อมูลเจ้าหนี้", "/ap?menu=supplier", {
+        enabled: true
+      }),
+      item("ap-opening-debt", "ตั้งหนี้ยกมา (เจ้าหนี้)", "/ap?menu=opening-debt", {
+        enabled: true
+      }),
+      item("ap-opening-credit", "ลดหนี้ยกมา (เจ้าหนี้)", "/ap?menu=opening-credit", {
+        enabled: true
+      }),
+      item("ap-opening-debit", "เพิ่มหนี้ยกมา (เจ้าหนี้)", "/ap?menu=opening-debit", {
+        enabled: true
+      }),
+      item("ap-other-debt", "ตั้งหนี้อื่นๆ (เจ้าหนี้)", "/ap?menu=other-debt", {
+        enabled: true
+      }),
+      item("ap-other-credit", "ลดหนี้อื่นๆ (เจ้าหนี้)", "/ap?menu=other-credit", {
+        enabled: true
+      }),
+      item("ap-other-debit", "เพิ่มหนี้อื่นๆ (เจ้าหนี้)", "/ap?menu=other-debit", {
+        enabled: true
+      }),
+      item("ap-billing", "ใบรับวางบิล (เจ้าหนี้)", "/ap?menu=billing", {
+        enabled: true
+      }),
+      item("ap-payment", "จ่ายชำระหนี้ (เจ้าหนี้)", "/ap?menu=payment", {
+        enabled: true
+      })
     ]
   },
   {
@@ -281,15 +353,33 @@ export const sidebarNavGroups: SidebarNavGroup[] = [
     label: "ระบบลูกหนี้",
     icon: Landmark,
     items: [
-      pending("ar-customer", "ข้อมูลลูกหนี้", "/ar?menu=customer"),
-      pending("ar-opening-debt", "ตั้งหนี้ยกมา (ลูกหนี้)", "/ar?menu=opening-debt"),
-      pending("ar-opening-debit", "เพิ่มหนี้ยกมา (ลูกหนี้)", "/ar?menu=opening-debit"),
-      pending("ar-opening-credit", "ลดหนี้ยกมา (ลูกหนี้)", "/ar?menu=opening-credit"),
-      pending("ar-other-debt", "ตั้งหนี้อื่นๆ (ลูกหนี้)", "/ar?menu=other-debt"),
-      pending("ar-other-credit", "ลดหนี้อื่นๆ (ลูกหนี้)", "/ar?menu=other-credit"),
-      pending("ar-other-debit", "เพิ่มหนี้อื่นๆ (ลูกหนี้)", "/ar?menu=other-debit"),
-      pending("ar-billing", "ใบวางบิล (ลูกหนี้)", "/ar?menu=billing"),
-      pending("ar-receipt", "รับชำระหนี้ (ลูกหนี้)", "/ar?menu=receipt")
+      item("ar-customer", "ข้อมูลลูกหนี้", "/ar?menu=customer", {
+        enabled: true
+      }),
+      item("ar-opening-debt", "ตั้งหนี้ยกมา (ลูกหนี้)", "/ar?menu=opening-debt", {
+        enabled: true
+      }),
+      item("ar-opening-debit", "เพิ่มหนี้ยกมา (ลูกหนี้)", "/ar?menu=opening-debit", {
+        enabled: true
+      }),
+      item("ar-opening-credit", "ลดหนี้ยกมา (ลูกหนี้)", "/ar?menu=opening-credit", {
+        enabled: true
+      }),
+      item("ar-other-debt", "ตั้งหนี้อื่นๆ (ลูกหนี้)", "/ar?menu=other-debt", {
+        enabled: true
+      }),
+      item("ar-other-credit", "ลดหนี้อื่นๆ (ลูกหนี้)", "/ar?menu=other-credit", {
+        enabled: true
+      }),
+      item("ar-other-debit", "เพิ่มหนี้อื่นๆ (ลูกหนี้)", "/ar?menu=other-debit", {
+        enabled: true
+      }),
+      item("ar-billing", "ใบวางบิล (ลูกหนี้)", "/ar?menu=billing", {
+        enabled: true
+      }),
+      item("ar-receipt", "รับชำระหนี้ (ลูกหนี้)", "/ar?menu=payment", {
+        enabled: true
+      })
     ]
   },
   {
@@ -297,35 +387,94 @@ export const sidebarNavGroups: SidebarNavGroup[] = [
     label: "ระบบเงินสด/ธนาคาร",
     icon: Banknote,
     items: [
-      pending("cash-other-income", "รายได้อื่นๆ", "/cash-bank?menu=other-income"),
-      pending("cash-other-income-credit", "ลดหนี้รายได้อื่นๆ", "/cash-bank?menu=other-income-credit"),
-      pending("cash-other-income-debit", "เพิ่มหนี้รายได้อื่นๆ", "/cash-bank?menu=other-income-debit"),
-      pending("cash-other-expense", "ค่าใช้จ่ายอื่นๆ", "/cash-bank?menu=other-expense"),
-      pending("cash-other-expense-credit", "ลดหนี้ค่าใช้จ่ายอื่นๆ", "/cash-bank?menu=other-expense-credit"),
-      pending("cash-other-expense-debit", "เพิ่มหนี้ค่าใช้จ่ายอื่นๆ", "/cash-bank?menu=other-expense-debit"),
-      pending("cash-opening", "ยกมาเงินสด", "/cash-bank?menu=cash-opening"),
-      pending("cash-petty-reduce", "คืน/ลด วงเงินสดย่อย", "/cash-bank?menu=petty-reduce"),
-      pending("cash-petty-increase", "รับ/เพิ่ม วงเงินสดย่อย", "/cash-bank?menu=petty-increase"),
-      pending("bank-opening", "เงินฝากธนาคารยกมา", "/cash-bank?menu=bank-opening"),
-      pending("bank-deposit", "บันทึกฝากเงิน", "/cash-bank?menu=bank-deposit"),
-      pending("bank-withdraw", "บันทึกถอนเงิน", "/cash-bank?menu=bank-withdraw"),
-      pending("bank-transfer", "บันทึกโอนเงินระหว่างธนาคาร", "/cash-bank?menu=bank-transfer"),
-      pending("wallet-redeem", "บันทึกขึ้นเงิน wallet", "/cash-bank?menu=wallet-redeem"),
-      pending("cheque-in-list", "ทะเบียนเช็ครับ", "/cash-bank?menu=cheque-in-list"),
-      pending("cheque-in-opening", "เช็ครับยกมา", "/cash-bank?menu=cheque-in-opening"),
-      pending("cheque-in-deposit", "บันทึกนำฝาก (เช็ครับ)", "/cash-bank?menu=cheque-in-deposit"),
-      pending("cheque-in-pass", "บันทึกเช็คผ่าน (เช็ครับ)", "/cash-bank?menu=cheque-in-pass"),
-      pending("cheque-in-return", "บันทึกเช็คคืน (เช็ครับ)", "/cash-bank?menu=cheque-in-return"),
-      pending("cheque-in-expire", "บันทึกเช็คขาดสิทธิ์ (เช็ครับ)", "/cash-bank?menu=cheque-in-expire"),
-      pending("cheque-in-change", "บันทึกการเปลี่ยนเช็ค (เช็ครับ)", "/cash-bank?menu=cheque-in-change"),
-      pending("cheque-in-return-new-debt", "บันทึกคืนเช็ค/ตั้งหนี้ใหม่", "/cash-bank?menu=cheque-in-return-new-debt"),
-      pending("cheque-out-list", "ทะเบียนเช็คจ่าย", "/cash-bank?menu=cheque-out-list"),
-      pending("cheque-out-opening", "เช็คจ่ายยกมา", "/cash-bank?menu=cheque-out-opening"),
-      pending("cheque-out-pass", "บันทึกเช็คผ่าน (เช็คจ่าย)", "/cash-bank?menu=cheque-out-pass"),
-      pending("cheque-out-return", "บันทึกเช็คคืน (เช็คจ่าย)", "/cash-bank?menu=cheque-out-return"),
-      pending("cheque-out-expire", "บันทึกเช็คขาดสิทธิ์ (เช็คจ่าย)", "/cash-bank?menu=cheque-out-expire"),
-      pending("cheque-out-change", "บันทึกการเปลี่ยนเช็ค (เช็คจ่าย)", "/cash-bank?menu=cheque-out-change"),
-      pending("credit-card-redeem", "บันทึกขึ้นเงินบัตรเครดิต", "/cash-bank?menu=credit-card-redeem")
+      item("cash-other-income", "รายได้อื่นๆ", "/cash-bank?menu=other-income", {
+        enabled: true
+      }),
+      item("cash-other-income-credit", "ลดหนี้รายได้อื่นๆ", "/cash-bank?menu=other-income-credit", {
+        enabled: true
+      }),
+      item("cash-other-income-debit", "เพิ่มหนี้รายได้อื่นๆ", "/cash-bank?menu=other-income-debit", {
+        enabled: true
+      }),
+      item("cash-other-expense", "ค่าใช้จ่ายอื่นๆ", "/cash-bank?menu=other-expense", {
+        enabled: true
+      }),
+      item("cash-other-expense-credit", "ลดหนี้ค่าใช้จ่ายอื่นๆ", "/cash-bank?menu=other-expense-credit", {
+        enabled: true
+      }),
+      item("cash-other-expense-debit", "เพิ่มหนี้ค่าใช้จ่ายอื่นๆ", "/cash-bank?menu=other-expense-debit", {
+        enabled: true
+      }),
+      item("cash-opening", "ยกมาเงินสด", "/cash-bank?menu=cash-opening", {
+        enabled: true
+      }),
+      item("cash-petty-reduce", "คืน/ลด วงเงินสดย่อย", "/cash-bank?menu=petty-reduce", {
+        enabled: true
+      }),
+      item("cash-petty-increase", "รับ/เพิ่ม วงเงินสดย่อย", "/cash-bank?menu=petty-increase", {
+        enabled: true
+      }),
+      item("bank-opening", "เงินฝากธนาคารยกมา", "/cash-bank?menu=bank-opening", {
+        enabled: true
+      }),
+      item("bank-deposit", "บันทึกฝากเงิน", "/cash-bank?menu=bank-deposit", {
+        enabled: true
+      }),
+      item("bank-withdraw", "บันทึกถอนเงิน", "/cash-bank?menu=bank-withdraw", {
+        enabled: true
+      }),
+      item("bank-transfer", "บันทึกโอนเงินระหว่างธนาคาร", "/cash-bank?menu=bank-transfer", {
+        enabled: true
+      }),
+      item("wallet-redeem", "บันทึกขึ้นเงิน wallet", "/cash-bank?menu=wallet-redeem", {
+        badge: "รอ",
+        enabled: true
+      }),
+      item("cheque-in-list", "ทะเบียนเช็ครับ", "/cash-bank?menu=cheque-in-list", {
+        enabled: true
+      }),
+      item("cheque-in-opening", "เช็ครับยกมา", "/cash-bank?menu=cheque-in-opening", {
+        enabled: true
+      }),
+      item("cheque-in-deposit", "บันทึกนำฝาก (เช็ครับ)", "/cash-bank?menu=cheque-in-deposit", {
+        enabled: true
+      }),
+      item("cheque-in-pass", "บันทึกเช็คผ่าน (เช็ครับ)", "/cash-bank?menu=cheque-in-pass", {
+        enabled: true
+      }),
+      item("cheque-in-return", "บันทึกเช็คคืน (เช็ครับ)", "/cash-bank?menu=cheque-in-return", {
+        enabled: true
+      }),
+      item("cheque-in-expire", "บันทึกเช็คขาดสิทธิ์ (เช็ครับ)", "/cash-bank?menu=cheque-in-expire", {
+        enabled: true
+      }),
+      item("cheque-in-change", "บันทึกการเปลี่ยนเช็ค (เช็ครับ)", "/cash-bank?menu=cheque-in-change", {
+        enabled: true
+      }),
+      item("cheque-in-return-new-debt", "บันทึกคืนเช็ค/ตั้งหนี้ใหม่", "/cash-bank?menu=cheque-in-return-new-debt", {
+        enabled: true
+      }),
+      item("cheque-out-list", "ทะเบียนเช็คจ่าย", "/cash-bank?menu=cheque-out-list", {
+        enabled: true
+      }),
+      item("cheque-out-opening", "เช็คจ่ายยกมา", "/cash-bank?menu=cheque-out-opening", {
+        enabled: true
+      }),
+      item("cheque-out-pass", "บันทึกเช็คผ่าน (เช็คจ่าย)", "/cash-bank?menu=cheque-out-pass", {
+        enabled: true
+      }),
+      item("cheque-out-return", "บันทึกเช็คคืน (เช็คจ่าย)", "/cash-bank?menu=cheque-out-return", {
+        enabled: true
+      }),
+      item("cheque-out-expire", "บันทึกเช็คขาดสิทธิ์ (เช็คจ่าย)", "/cash-bank?menu=cheque-out-expire", {
+        enabled: true
+      }),
+      item("cheque-out-change", "บันทึกการเปลี่ยนเช็ค (เช็คจ่าย)", "/cash-bank?menu=cheque-out-change", {
+        enabled: true
+      }),
+      item("credit-card-redeem", "บันทึกขึ้นเงินบัตรเครดิต", "/cash-bank?menu=credit-card-redeem", {
+        enabled: true
+      })
     ]
   },
   {
@@ -333,24 +482,33 @@ export const sidebarNavGroups: SidebarNavGroup[] = [
     label: "ระบบบัญชี",
     icon: BookOpenCheck,
     items: [
-      pending("accounting-assets", "รายละเอียดสินทรัพย์", "/accounting?menu=assets"),
-      pending(
+      item("accounting-assets", "รายละเอียดสินทรัพย์", "/accounting?menu=assets", {
+        enabled: true
+      }),
+      item(
         "accounting-asset-maintenance",
         "บันทึกการซ่อมบำรุงสินทรัพย์",
-        "/accounting?menu=asset-maintenance"
+        "/accounting?menu=asset-maintenance",
+        { enabled: true }
       ),
-      pending(
+      item(
         "accounting-asset-sale",
         "บันทึกการขายสินทรัพย์",
-        "/accounting?menu=asset-sale"
+        "/accounting?menu=asset-sale",
+        { enabled: true }
       ),
-      pending(
+      item(
         "accounting-transfer",
         "โอนข้อมูลเข้าระบบบัญชี",
-        "/accounting?menu=transfer"
+        "/accounting?menu=transfer",
+        { enabled: true }
       ),
-      pending("accounting-mapping", "รายละเอียดฝังบัญชี", "/accounting?menu=mapping"),
-      pending("accounting-journal", "ข้อมูลรายวัน", "/accounting?menu=journal")
+      item("accounting-mapping", "รายละเอียดฝังบัญชี", "/accounting?menu=mapping", {
+        enabled: true
+      }),
+      item("accounting-journal", "ข้อมูลรายวัน", "/accounting?menu=journal", {
+        enabled: true
+      })
     ]
   },
   {
