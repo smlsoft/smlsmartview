@@ -1,6 +1,3 @@
-import { existsSync, readFileSync } from "fs";
-import { tmpdir } from "os";
-import { join } from "path";
 import { Pool, type QueryResultRow } from "pg";
 
 declare global {
@@ -28,63 +25,42 @@ export function mainDatabaseName(providerCode: string) {
   return `smlerpmain${providerCode.trim().toLowerCase()}`;
 }
 
-function readXmlTag(xml: string, tagName: string) {
-  const match = xml.match(new RegExp(`<${tagName}>\\s*([^<]*?)\\s*</${tagName}>`, "i"));
-  return match?.[1]?.trim() ?? "";
-}
-
-function legacyConfigCandidates(providerCode: string) {
-  const fileName = `SMLConfig${normalizeProviderCode(providerCode)}.xml`;
-  return [
-    process.env.SML_CONFIG_DIR ? join(process.env.SML_CONFIG_DIR, fileName) : "",
-    tmpdir() ? join(tmpdir(), fileName) : "",
-    join(
-      "C:\\Program Files\\Apache Software Foundation\\Tomcat 8.5\\temp",
-      fileName
-    )
-  ].filter(Boolean);
-}
-
-function databaseUrlFromBaseUrl(baseUrl: string, databaseName: string) {
-  const url = new URL(baseUrl);
-  url.pathname = `/${databaseName}`;
-  return url.toString();
-}
-
-function databaseUrlFromLegacyConfig(providerCode: string, databaseName: string) {
-  const configPath = legacyConfigCandidates(providerCode).find((path) =>
-    existsSync(path)
-  );
-  if (!configPath) {
-    throw new Error(
-      `DATABASE_URL is not set and SMLConfig${normalizeProviderCode(providerCode)}.xml was not found`
-    );
+function requiredEnv(name: string) {
+  const value = process.env[name]?.trim();
+  if (!value) {
+    throw new Error(`${name} is required`);
   }
-
-  const xml = readFileSync(configPath, "utf8");
-  const server = readXmlTag(xml, "server");
-  const port = readXmlTag(xml, "port") || "5432";
-  const user = readXmlTag(xml, "user");
-  const password = readXmlTag(xml, "password");
-  if (!server || !user) {
-    throw new Error(`${configPath} is missing database server or user`);
-  }
-
-  return `postgresql://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${server}:${port}/${databaseName}`;
+  return value;
 }
 
-function providerDatabaseUrl(providerCode: string, databaseName: string) {
-  const normalizedProvider = normalizeProviderCode(providerCode);
-  const normalizedDatabase = normalizeDatabaseName(databaseName);
-  const baseUrl = process.env.DATABASE_URL?.trim();
-  if (baseUrl) {
-    return databaseUrlFromBaseUrl(baseUrl, normalizedDatabase);
+function dbPort() {
+  const value = process.env.DB_PORT?.trim() || "5432";
+  const port = Number(value);
+  if (!Number.isInteger(port) || port <= 0 || port > 65535) {
+    throw new Error("DB_PORT must be a valid TCP port");
   }
-  return databaseUrlFromLegacyConfig(normalizedProvider, normalizedDatabase);
+  return port;
 }
 
-function createPool(connectionString: string) {
-  return new Pool({ connectionString, max: 10 });
+function effectiveDatabaseName(databaseName: string) {
+  const requestedDatabase = databaseName.trim() || process.env.DB_NAME || "";
+  return normalizeDatabaseName(requestedDatabase);
+}
+
+function providerDatabaseConfig(providerCode: string, databaseName: string) {
+  normalizeProviderCode(providerCode);
+  return {
+    host: requiredEnv("DB_HOST"),
+    port: dbPort(),
+    user: requiredEnv("DB_USER"),
+    password: process.env.DB_PASSWORD ?? "",
+    database: effectiveDatabaseName(databaseName),
+    max: 10
+  };
+}
+
+function createPool(providerCode: string, databaseName: string) {
+  return new Pool(providerDatabaseConfig(providerCode, databaseName));
 }
 
 const databasePools = global.__smlMisPoolsByDatabase ?? new Map<string, Pool>();
@@ -94,16 +70,14 @@ if (process.env.NODE_ENV !== "production") {
 
 function poolForProviderDatabase(providerCode: string, databaseName: string) {
   const normalizedProvider = normalizeProviderCode(providerCode);
-  const normalizedDatabase = normalizeDatabaseName(databaseName);
+  const normalizedDatabase = effectiveDatabaseName(databaseName);
   const key = `${normalizedProvider}:${normalizedDatabase}`;
   const existing = databasePools.get(key);
   if (existing) {
     return existing;
   }
 
-  const nextPool = createPool(
-    providerDatabaseUrl(normalizedProvider, normalizedDatabase)
-  );
+  const nextPool = createPool(normalizedProvider, normalizedDatabase);
   databasePools.set(key, nextPool);
   return nextPool;
 }
