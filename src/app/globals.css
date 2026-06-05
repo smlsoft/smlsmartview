@@ -83,6 +83,89 @@ html.dark {
   --shadow-focus: 0 0 0 3px rgba(196,149,106,0.35);
 }
 
+/* ── Cream Coral · light ── */
+html[data-theme="cream-coral"] {
+  --color-bg: #FAF9F5;
+  --color-surface: #EFE9DE;
+  --color-surface-elevated: #EFE9DE;
+  --color-surface-muted: #F5F0E8;
+  --color-surface-sunken: #E8E0D2;
+  --color-border: #E6DFD8;
+  --color-border-strong: #EBE6DF;
+  --color-text-primary: #141413;
+  --color-text-secondary: #252523;
+  --color-text-tertiary: #3D3D3A;
+  --color-text-on-accent: #FFFFFF;
+  --color-accent: #CC785C;
+  --color-accent-soft: #E6DFD8;
+  --color-accent-strong: #A9583E;
+  --color-success: #5DB872;
+  --color-success-soft: #E6F4EA;
+  --color-warning: #D4A017;
+  --color-warning-soft: #FEF3C7;
+  --color-danger: #C64545;
+  --color-danger-soft: #FDE7E7;
+  --color-info: #5DB8A6;
+  --color-info-soft: #E0F2FE;
+  --color-chart-1: #CC785C;
+  --color-chart-2: #E8A55A;
+  --color-chart-3: #5DB8A6;
+  --color-chart-4: #5DB872;
+  --color-chart-5: #181715;
+  --color-chart-grid: #E6DFD8;
+  --color-chart-axis: #6C6A64;
+  --shadow-micro: 0 1px 3px rgba(20,20,19,0.08);
+  --shadow-lift: 0 8px 32px rgba(20,20,19,0.08), 0 2px 8px rgba(20,20,19,0.04);
+  --shadow-focus: 0 0 0 3px rgba(204,120,92,0.20);
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+  --ease-standard: cubic-bezier(0.2, 0.0, 0.0, 1.0);
+  --ease-emphasized: cubic-bezier(0.2, 0.0, 0.0, 1.2);
+}
+
+/* ── Cream Coral · dark ── */
+html[data-theme="cream-coral"].dark {
+  --color-bg: #181715;
+  --color-surface: #1F1E1B;
+  --color-surface-elevated: #252320;
+  --color-surface-muted: #1F1E1B;
+  --color-surface-sunken: #141413;
+  --color-border: #3D3D3A;
+  --color-border-strong: #6C6A64;
+  --color-text-primary: #FAF9F5;
+  --color-text-secondary: #EFE9DE;
+  --color-text-tertiary: #A09D96;
+  --color-text-on-accent: #FFFFFF;
+  --color-accent: #CC785C;
+  --color-accent-soft: #252320;
+  --color-accent-strong: #E8A55A;
+  --color-success: #5DB872;
+  --color-success-soft: #0A1F10;
+  --color-warning: #D4A017;
+  --color-warning-soft: #2B2510;
+  --color-danger: #C64545;
+  --color-danger-soft: #2B1010;
+  --color-info: #5DB8A6;
+  --color-info-soft: #0A2020;
+  --color-chart-1: #CC785C;
+  --color-chart-2: #E8A55A;
+  --color-chart-3: #5DB8A6;
+  --color-chart-4: #5DB872;
+  --color-chart-5: #A09D96;
+  --color-chart-grid: #3D3D3A;
+  --color-chart-axis: #6C6A64;
+  --shadow-micro: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-lift: 0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-focus: 0 0 0 3px rgba(204,120,92,0.35);
+}
+
 /* ══════════════════════════════════════════════════
    NAMED THEMES — every theme has light + dark mode
    ══════════════════════════════════════════════════ */
@@ -868,6 +951,255 @@ html[data-theme="vercel-minimal"].dark {
   --shadow-focus: 0 0 0 3px rgba(237,237,237,0.22);
 }
 
+/* ── Cohere Design · light ── */
+html[data-theme="cohere-design"] {
+  --color-bg: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-muted: #F1F5FF;
+  --color-surface-sunken: #EEECE7;
+  --color-border: #E5E7EB;
+  --color-border-strong: #D9D9DD;
+  --color-text-primary: #000000;
+  --color-text-secondary: #212121;
+  --color-text-tertiary: #75758A;
+  --color-text-on-accent: #FFFFFF;
+  --color-accent: #17171C;
+  --color-accent-soft: #93939F;
+  --color-accent-strong: #000000;
+  --color-success: #003C33;
+  --color-success-soft: #EDFCE9;
+  --color-warning: #FF7759;
+  --color-warning-soft: #FFAD9B;
+  --color-danger: #B30000;
+  --color-danger-soft: #FFAD9B;
+  --color-info: #1863DC;
+  --color-info-soft: #F1F5FF;
+  --color-chart-1: #17171C;
+  --color-chart-2: #003C33;
+  --color-chart-3: #071829;
+  --color-chart-4: #FF7759;
+  --color-chart-5: #1863DC;
+  --color-chart-grid: #E5E7EB;
+  --color-chart-axis: #93939F;
+  --shadow-micro: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-lift: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-focus: 0 0 0 3px rgba(76,110,230,0.3);
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 30px;
+  --radius-pill: 9999px;
+}
+/* ── Cohere Design · dark ── */
+html[data-theme="cohere-design"].dark {
+  --color-bg: #071829;
+  --color-surface: #17171C;
+  --color-surface-elevated: #212121;
+  --color-surface-muted: #003C33;
+  --color-surface-sunken: #000000;
+  --color-border: #75758A;
+  --color-border-strong: #93939F;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #EEECE7;
+  --color-text-tertiary: #D9D9DD;
+  --color-text-on-accent: #000000;
+  --color-accent: #FFFFFF;
+  --color-accent-soft: #75758A;
+  --color-accent-strong: #EEECE7;
+  --color-success: #EDFCE9;
+  --color-success-soft: #003C33;
+  --color-warning: #FFAD9B;
+  --color-warning-soft: #FF7759;
+  --color-danger: #FFAD9B;
+  --color-danger-soft: #B30000;
+  --color-info: #F1F5FF;
+  --color-info-soft: #1863DC;
+  --color-chart-1: #FFFFFF;
+  --color-chart-2: #EDFCE9;
+  --color-chart-3: #FFAD9B;
+  --color-chart-4: #F1F5FF;
+  --color-chart-5: #1863DC;
+  --color-chart-grid: #212121;
+  --color-chart-axis: #75758A;
+  --shadow-micro: 0 1px 2px rgba(0,0,0,0.5);
+  --shadow-lift: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-focus: 0 0 0 3px rgba(76,110,230,0.4);
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 30px;
+  --radius-pill: 9999px;
+}
+
+/* ── ElevenLabs Design · light ── */
+html[data-theme="elevenlabs"] {
+  --color-bg: #F5F5F5;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-muted: #FAFAFA;
+  --color-surface-sunken: #F0EFED;
+  --color-border: #E7E5E4;
+  --color-border-strong: #D6D3D1;
+  --color-text-primary: #0C0A09;
+  --color-text-secondary: #4E4E4E;
+  --color-text-tertiary: #777169;
+  --color-text-on-accent: #FFFFFF;
+  --color-accent: #292524;
+  --color-accent-soft: #A8A29E;
+  --color-accent-strong: #0C0A09;
+  --color-success: #16A34A;
+  --color-success-soft: #DCFCE7;
+  --color-warning: #F5A623;
+  --color-warning-soft: #FFF8EE;
+  --color-danger: #DC2626;
+  --color-danger-soft: #FEE2E2;
+  --color-info: #1863DC;
+  --color-info-soft: #F1F5FF;
+  --color-chart-1: #A7E5D3;
+  --color-chart-2: #F4C5A8;
+  --color-chart-3: #C8B8E0;
+  --color-chart-4: #A8C8E8;
+  --color-chart-5: #E8B8C4;
+  --color-chart-grid: #E7E5E4;
+  --color-chart-axis: #A8A29E;
+  --shadow-micro: 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-lift: 0 4px 16px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.02);
+  --shadow-focus: 0 0 0 2px rgba(12,10,9,0.3);
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+}
+/* ── ElevenLabs Design · dark ── */
+html[data-theme="elevenlabs"].dark {
+  --color-bg: #0C0A09;
+  --color-surface: #1C1917;
+  --color-surface-elevated: #292524;
+  --color-surface-muted: #171717;
+  --color-surface-sunken: #000000;
+  --color-border: #292524;
+  --color-border-strong: #4E4E4E;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A8A29E;
+  --color-text-tertiary: #777169;
+  --color-text-on-accent: #0C0A09;
+  --color-accent: #FFFFFF;
+  --color-accent-soft: #292524;
+  --color-accent-strong: #F5F5F5;
+  --color-success: #16A34A;
+  --color-success-soft: #0F3F20;
+  --color-warning: #F5A623;
+  --color-warning-soft: #3D2909;
+  --color-danger: #DC2626;
+  --color-danger-soft: #4A0E0E;
+  --color-info: #1863DC;
+  --color-info-soft: #082046;
+  --color-chart-1: #A7E5D3;
+  --color-chart-2: #F4C5A8;
+  --color-chart-3: #C8B8E0;
+  --color-chart-4: #A8C8E8;
+  --color-chart-5: #E8B8C4;
+  --color-chart-grid: #292524;
+  --color-chart-axis: #777169;
+  --shadow-micro: 0 1px 2px rgba(0,0,0,0.5);
+  --shadow-lift: 0 4px 16px rgba(0,0,0,0.6);
+  --shadow-focus: 0 0 0 2px rgba(255,255,255,0.4);
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+}
+
+/* ── MiniMax Design · light ── */
+html[data-theme="minimax-design"] {
+  --color-bg: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-muted: #F9FAFB;
+  --color-surface-sunken: #F3F4F6;
+  --color-border: #E5E7EB;
+  --color-border-strong: #D1D5DB;
+  --color-text-primary: #000000;
+  --color-text-secondary: #374151;
+  --color-text-tertiary: #6B7280;
+  --color-text-on-accent: #FFFFFF;
+  --color-accent: #000000;
+  --color-accent-soft: #374151;
+  --color-accent-strong: #000000;
+  --color-success: #10B981;
+  --color-success-soft: #D1FAE5;
+  --color-warning: #F59E0B;
+  --color-warning-soft: #FEF3C7;
+  --color-danger: #D45656;
+  --color-danger-soft: #FEE2E2;
+  --color-info: #2563EB;
+  --color-info-soft: #DBEAFE;
+  --color-chart-1: #FF4A4A;
+  --color-chart-2: #E91E63;
+  --color-chart-3: #2563EB;
+  --color-chart-4: #9333EA;
+  --color-chart-5: #000000;
+  --color-chart-grid: #E5E7EB;
+  --color-chart-axis: #6B7280;
+  --shadow-micro: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-lift: 0 4px 6px rgba(0,0,0,0.08);
+  --shadow-focus: 0 0 0 2px rgba(0,0,0,0.3);
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+}
+/* ── MiniMax Design · dark ── */
+html[data-theme="minimax-design"].dark {
+  --color-bg: #000000;
+  --color-surface: #111111;
+  --color-surface-elevated: #1A1A1A;
+  --color-surface-muted: #222222;
+  --color-surface-sunken: #000000;
+  --color-border: #333333;
+  --color-border-strong: #444444;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #E5E7EB;
+  --color-text-tertiary: #9CA3AF;
+  --color-text-on-accent: #000000;
+  --color-accent: #FFFFFF;
+  --color-accent-soft: #E5E7EB;
+  --color-accent-strong: #FFFFFF;
+  --color-success: #10B981;
+  --color-success-soft: #064E3B;
+  --color-warning: #F59E0B;
+  --color-warning-soft: #78350F;
+  --color-danger: #D45656;
+  --color-danger-soft: #7F1D1D;
+  --color-info: #2563EB;
+  --color-info-soft: #1E3A8A;
+  --color-chart-1: #FF4A4A;
+  --color-chart-2: #E91E63;
+  --color-chart-3: #2563EB;
+  --color-chart-4: #9333EA;
+  --color-chart-5: #FFFFFF;
+  --color-chart-grid: #333333;
+  --color-chart-axis: #9CA3AF;
+  --shadow-micro: 0 1px 2px rgba(0,0,0,0.8);
+  --shadow-lift: 0 4px 6px rgba(0,0,0,0.6);
+  --shadow-focus: 0 0 0 2px rgba(255,255,255,0.4);
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -1047,8 +1379,8 @@ select {
       linear-gradient(
         180deg,
         color-mix(in srgb, var(--color-surface) 54%, var(--color-bg)) 0%,
-        color-mix(in srgb, var(--login-bg-0) 82%, var(--color-surface)) 58%,
-        color-mix(in srgb, var(--login-bg-2) 12%, var(--color-bg)) 100%
+        color-mix(in srgb, var(--color-chart-1) 82%, var(--color-surface)) 58%,
+        color-mix(in srgb, var(--color-chart-3) 12%, var(--color-bg)) 100%
       ),
       var(--color-bg);
   }
@@ -1074,10 +1406,10 @@ select {
       ),
       linear-gradient(
         90deg,
-        color-mix(in srgb, var(--login-bg-2) 8%, transparent) 0%,
+        color-mix(in srgb, var(--color-chart-3) 8%, transparent) 0%,
         transparent 22%,
         transparent 78%,
-        color-mix(in srgb, var(--login-bg-1) 8%, transparent) 100%
+        color-mix(in srgb, var(--color-chart-2) 8%, transparent) 100%
       );
   }
 
@@ -1088,15 +1420,15 @@ select {
     background:
       radial-gradient(
         ellipse at 50% 100%,
-        color-mix(in srgb, var(--login-bg-2) 24%, transparent) 0%,
-        color-mix(in srgb, var(--login-bg-2) 10%, transparent) 26%,
+        color-mix(in srgb, var(--color-chart-3) 24%, transparent) 0%,
+        color-mix(in srgb, var(--color-chart-3) 10%, transparent) 26%,
         transparent 60%
       ),
       linear-gradient(
         180deg,
         transparent 0%,
         transparent 54%,
-        color-mix(in srgb, var(--login-bg-2) 12%, transparent) 100%
+        color-mix(in srgb, var(--color-chart-3) 12%, transparent) 100%
       );
     opacity: 0.72;
   }

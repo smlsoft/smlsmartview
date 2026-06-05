@@ -35,3 +35,6 @@ Use these as reference/benchmark, not as code to blindly copy:
 - Join `ic_trans` to `ic_trans_detail` with `(trans_flag, doc_no, doc_date)`.
 - Do not mutate SMLERP production data from dashboard code unless explicitly requested.
 
+## Skills & Procedures
+- **Adding a new UI Theme:** Follow the steps in `c:\DEV\smlsmartview\smlsmartview\Docs\SKILL_ADD_THEME.md` to ensure global styles, fonts, theme context, and animated backgrounds update correctly.
+

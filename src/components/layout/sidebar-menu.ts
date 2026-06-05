@@ -68,7 +68,7 @@ export const sidebarNavGroups: SidebarNavGroup[] = [
         badge: "AI"
       }),
       item("ai-search", "ค้นหาข้อมูล", "/search", { badge: "AI" }),
-      item("ai-assistant", "ผู้ช่วย AI", "/assistant", { badge: "AI" }),
+      item("ai-assistant", "ผู้ช่วย AI", "/assistant", { badge: "AI", enabled: true }),
       item("ai-secretary", "เลขาส่วนตัว", "/secretary", { badge: "AI" }),
       item("ai-customer-chat", "คุยกับลูกค้า", "/customer-chat", {
         badge: "AI"

@@ -50,7 +50,7 @@ export function MainScrollArea({ children }: { children: React.ReactNode }) {
     <main
       ref={areaRef}
       className={cn(
-        "premium-scrollbar min-w-0 flex-1 overflow-y-auto",
+        "premium-scrollbar min-w-0 flex-1 overflow-y-auto flex flex-col",
         scrolling ? "is-scrolling" : ""
       )}
     >

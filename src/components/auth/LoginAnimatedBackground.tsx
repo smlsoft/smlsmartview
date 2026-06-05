@@ -1,14 +1,7 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { useEffect, useRef } from "react";
 import { useTheme } from "@/lib/theme-context";
-
-const themeDrivenGlow = {
-  "--login-bg-0": "var(--color-bg)",
-  "--login-bg-1": "var(--color-accent)",
-  "--login-bg-2": "var(--color-chart-2)",
-} as CSSProperties;
 
 interface Rgb {
   r: number;
@@ -48,70 +41,14 @@ function rgba(color: Rgb, alpha: number) {
   return `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`;
 }
 
-function mix(a: Rgb, b: Rgb, amount: number): Rgb {
-  const t = Math.max(0, Math.min(1, amount));
-  return {
-    r: Math.round(a.r + (b.r - a.r) * t),
-    g: Math.round(a.g + (b.g - a.g) * t),
-    b: Math.round(a.b + (b.b - a.b) * t),
-  };
-}
-
-function smoothstep(edge0: number, edge1: number, value: number) {
-  const t = Math.max(0, Math.min(1, (value - edge0) / (edge1 - edge0)));
-  return t * t * (3 - 2 * t);
-}
-
-function drawGlow(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  radius: number,
-  color: Rgb,
-  alpha: number,
-) {
-  const gradient = ctx.createRadialGradient(x, y, radius * 0.04, x, y, radius);
-  gradient.addColorStop(0, rgba(color, alpha));
-  gradient.addColorStop(0.36, rgba(color, alpha * 0.54));
-  gradient.addColorStop(0.68, rgba(color, alpha * 0.16));
-  gradient.addColorStop(1, rgba(color, 0));
-  ctx.fillStyle = gradient;
-  ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-}
-
-function drawWave(
-  ctx: CanvasRenderingContext2D,
-  width: number,
-  y: number,
-  amplitude: number,
-  phase: number,
-  color: Rgb,
-  alpha: number,
-  thickness: number,
-) {
-  ctx.beginPath();
-  for (let x = -60; x <= width + 60; x += 42) {
-    const progress = x / width;
-    const waveY =
-      y +
-      Math.sin(progress * Math.PI * 2.2 + phase) * amplitude +
-      Math.sin(progress * Math.PI * 4.1 - phase * 0.72) * amplitude * 0.36;
-    if (x === -60) {
-      ctx.moveTo(x, waveY);
-    } else {
-      ctx.lineTo(x, waveY);
-    }
-  }
-  ctx.strokeStyle = rgba(color, alpha);
-  ctx.lineWidth = thickness;
-  ctx.lineCap = "round";
-  ctx.stroke();
+// Ease out function for smooth settling
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
 }
 
 export function LoginAnimatedBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { currentTheme, dark } = useTheme();
-  const animationKey = `${currentTheme.id}-${dark ? "dark" : "light"}`;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -119,187 +56,137 @@ export function LoginAnimatedBackground() {
 
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
-    const canvasEl: HTMLCanvasElement = canvas;
-    const context: CanvasRenderingContext2D = ctx;
-
-    let frame = 0;
-    let lastDraw = 0;
-    let visible = !document.hidden;
+    
+    let animationFrameId: number;
     let width = 0;
     let height = 0;
     let dpr = 1;
-    let startedAt = performance.now();
-    let complete = false;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const duration = 8400;
-    const frameInterval = 1000 / (reducedMotion ? 20 : 32);
-    const motionScale = reducedMotion ? 0.95 : 1.18;
 
     const rootStyle = getComputedStyle(document.documentElement);
-    const accent = parseColor(rootStyle.getPropertyValue("--color-accent"), { r: 91, g: 156, b: 255 });
-    const secondary = parseColor(rootStyle.getPropertyValue("--color-chart-2"), { r: 96, g: 165, b: 250 });
-    const tertiary = parseColor(rootStyle.getPropertyValue("--color-chart-3"), { r: 147, g: 197, b: 253 });
-    const white = { r: 255, g: 255, b: 255 };
-    const accentAir = dark ? mix(accent, white, 0.18) : mix(accent, white, 0.54);
-    const secondaryAir = dark ? mix(secondary, white, 0.16) : mix(secondary, white, 0.5);
-    const tertiaryAir = dark ? mix(tertiary, white, 0.16) : mix(tertiary, white, 0.48);
+    
+    // Base colors from theme
+    const themeAccent = parseColor(rootStyle.getPropertyValue("--color-accent"), { r: 91, g: 156, b: 255 });
+    const themeSecondary = parseColor(rootStyle.getPropertyValue("--color-chart-2"), { r: 96, g: 165, b: 250 });
+    
+    // Dynamic theme colors instead of hardcoded ones
+    const color1 = themeAccent; 
+    const color2 = themeSecondary;
+    const color3 = parseColor(rootStyle.getPropertyValue("--color-chart-3"), { r: 168, g: 85, b: 247 });
+    const color4 = parseColor(rootStyle.getPropertyValue("--color-chart-4"), { r: 236, g: 72, b: 153 });
+
+    const orbs = [
+      { color: color1, phaseX: 0, phaseY: 2, speedX: 0.0003, speedY: 0.0004, sizeScale: 0.75 },
+      { color: color3, phaseX: 1, phaseY: 3, speedX: 0.0004, speedY: 0.0003, sizeScale: 0.8 },
+      { color: color2, phaseX: 2, phaseY: 1, speedX: 0.0005, speedY: 0.0005, sizeScale: 0.7 },
+      { color: color4, phaseX: 3, phaseY: 0, speedX: 0.00035, speedY: 0.00045, sizeScale: 0.85 },
+      { color: themeAccent, phaseX: 4, phaseY: 2.5, speedX: 0.00045, speedY: 0.00035, sizeScale: 0.65 },
+    ];
+
+    const startedAt = performance.now();
+    const activeDuration = 6000; // Plays actively for 6 seconds
+    const settleDuration = 3500; // Takes 3.5 seconds to settle to the center
 
     function resize() {
-      const rect = canvasEl.getBoundingClientRect();
+      const rect = canvas!.getBoundingClientRect();
       width = Math.max(1, rect.width);
       height = Math.max(1, rect.height);
-      dpr = Math.min(window.devicePixelRatio || 1, 1.35);
-      canvasEl.width = Math.round(width * dpr);
-      canvasEl.height = Math.round(height * dpr);
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      draw(complete ? startedAt + duration : performance.now());
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas!.width = Math.round(width * dpr);
+      canvas!.height = Math.round(height * dpr);
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      
+      // If we resize after it settled, we need to redraw once
+      if (performance.now() - startedAt > activeDuration + settleDuration) {
+        draw(startedAt + activeDuration + settleDuration);
+      }
+    }
+
+    function drawOrb(x: number, y: number, radius: number, color: Rgb, alpha: number) {
+      const gradient = ctx!.createRadialGradient(x, y, 0, x, y, radius);
+      gradient.addColorStop(0, rgba(color, alpha));
+      gradient.addColorStop(0.5, rgba(color, alpha * 0.6));
+      gradient.addColorStop(1, rgba(color, 0));
+      ctx!.fillStyle = gradient;
+      ctx!.beginPath();
+      ctx!.arc(x, y, radius, 0, Math.PI * 2);
+      ctx!.fill();
     }
 
     function draw(now: number) {
-      const ctx = context;
-      const rawProgress = Math.max(0, Math.min(1, (now - startedAt) / duration));
-      const progress = smoothstep(0, 1, rawProgress);
-      const seconds = rawProgress * 14;
-      ctx.clearRect(0, 0, width, height);
-      ctx.globalCompositeOperation = "source-over";
+      const elapsed = now - startedAt;
+      let progress = 1; // 1 = fully active, 0 = settled
+      let isComplete = false;
 
-      const maxSide = Math.max(width, height);
-      const phase = seconds * 0.3;
-      const enter = smoothstep(0.02, 0.18, rawProgress);
-      const middle = smoothstep(0.18, 0.36, rawProgress) * (1 - smoothstep(0.66, 0.88, rawProgress));
-      const greenPass = smoothstep(0.34, 0.48, rawProgress) * (1 - smoothstep(0.62, 0.82, rawProgress));
-      const fadeOut = 1 - smoothstep(0.82, 1, rawProgress);
-      const tail = 0.1 * (1 - smoothstep(0.92, 1, rawProgress));
-      const intensity = (tail + enter * 0.42 + middle * 0.8) * fadeOut;
-      const calm = dark ? 0.62 : 1;
-      const sheetColor = mix(secondaryAir, tertiaryAir, greenPass * 0.88);
-      const companionColor = mix(tertiaryAir, accentAir, 0.28 + greenPass * 0.34);
-      const sweepX = width * (-0.42 + progress * 1.82);
-      const sweepY =
-        height * (1.08 - progress * 1.04) +
-        Math.sin(progress * Math.PI * 2.1) * height * 0.11 * motionScale;
-
-      const veil = ctx.createLinearGradient(
-        width * (-0.12 + progress * 0.44),
-        height * 0.04,
-        width * (0.82 + progress * 0.34),
-        height * 0.78,
-      );
-      veil.addColorStop(0, rgba(sheetColor, (dark ? 0.22 : 0.28) * calm * intensity));
-      veil.addColorStop(0.46, rgba(companionColor, (dark ? 0.15 : 0.2) * calm * intensity));
-      veil.addColorStop(1, rgba(tertiaryAir, 0));
-      ctx.fillStyle = veil;
-      ctx.fillRect(0, 0, width, height);
-
-      drawGlow(
-        ctx,
-        sweepX,
-        sweepY,
-        maxSide * (0.96 + middle * 0.22),
-        sheetColor,
-        (dark ? 0.52 : 0.74) * calm * intensity,
-      );
-      drawGlow(
-        ctx,
-        sweepX + width * (0.34 + Math.sin(phase) * 0.16 * motionScale),
-        sweepY - height * (0.34 + Math.cos(phase * 0.7) * 0.08 * motionScale),
-        maxSide * 0.72,
-        companionColor,
-        (dark ? 0.34 : 0.46) * calm * intensity,
-      );
-      drawGlow(
-        ctx,
-        width * (-0.08 + progress * 0.7),
-        height * (0.86 - progress * 0.52),
-        maxSide * 0.6,
-        secondaryAir,
-        (dark ? 0.18 : 0.28) * calm * (intensity + 0.08),
-      );
-      drawGlow(
-        ctx,
-        width * (1.02 - progress * 0.42 + Math.sin(phase * 0.8) * 0.1 * motionScale),
-        height * (0.94 - progress * 0.38),
-        maxSide * 0.52,
-        sheetColor,
-        (dark ? 0.12 : 0.2) * calm * (1 - progress) * 0.9,
-      );
-
-      ctx.save();
-      ctx.filter = "blur(24px)";
-      ctx.globalCompositeOperation = "screen";
-      drawWave(
-        ctx,
-        width,
-        height * (0.54 + Math.sin(phase) * 0.09 * motionScale - progress * 0.32),
-        Math.max(20, height * 0.03),
-        seconds * 0.58,
-        mix(secondaryAir, white, 0.18),
-        (dark ? 0.052 : 0.084) * intensity,
-        Math.max(40, height * 0.058),
-      );
-      drawWave(
-        ctx,
-        width,
-        height * (0.74 + Math.cos(phase * 0.8) * 0.06 * motionScale - progress * 0.28),
-        Math.max(18, height * 0.024),
-        -seconds * 0.5,
-        mix(tertiaryAir, white, 0.24),
-        (dark ? 0.042 : 0.072) * intensity,
-        Math.max(34, height * 0.048),
-      );
-      ctx.restore();
-
-      ctx.globalCompositeOperation = "destination-in";
-      const fade = ctx.createLinearGradient(0, 0, 0, height);
-      fade.addColorStop(0, "rgba(255,255,255,0.98)");
-      fade.addColorStop(0.34, "rgba(255,255,255,0.9)");
-      fade.addColorStop(0.72, "rgba(255,255,255,0.52)");
-      fade.addColorStop(1, "rgba(255,255,255,0.18)");
-      ctx.fillStyle = fade;
-      ctx.fillRect(0, 0, width, height);
-      ctx.globalCompositeOperation = "source-over";
-    }
-
-    function tick(now: number) {
-      if (visible && now - lastDraw >= frameInterval) {
-        draw(now);
-        lastDraw = now;
+      if (elapsed > activeDuration) {
+        const settleElapsed = elapsed - activeDuration;
+        if (settleElapsed >= settleDuration) {
+          progress = 0;
+          isComplete = true;
+        } else {
+          // Smooth transition from active to settled
+          const settleProgress = settleElapsed / settleDuration;
+          progress = 1 - easeOutCubic(settleProgress);
+        }
       }
-      if (now - startedAt >= duration) {
-        complete = true;
-        draw(startedAt + duration);
-        return;
-      }
-      frame = window.requestAnimationFrame(tick);
-    }
 
-    function onVisibilityChange() {
-      visible = !document.hidden;
+      ctx!.clearRect(0, 0, width, height);
+      const maxDim = Math.max(width, height);
+      ctx!.globalCompositeOperation = dark ? "screen" : "source-over";
+
+      orbs.forEach((orb, i) => {
+        // Dynamic position
+        const dynX = width / 2 + Math.sin(now * orb.speedX + orb.phaseX) * width * 0.45;
+        const dynY = height / 2 + Math.cos(now * orb.speedY + orb.phaseY) * height * 0.45;
+
+        // Settled position (center)
+        // Add a tiny bit of offset based on index so they don't perfectly overlap
+        const settledX = width / 2 + Math.sin(i * 1.2) * (width * 0.05);
+        const settledY = height / 2 + Math.cos(i * 1.2) * (height * 0.05);
+
+        // Interpolate position based on progress
+        const x = settledX + (dynX - settledX) * progress;
+        const y = settledY + (dynY - settledY) * progress;
+        
+        // Size settles down slightly
+        const dynRadius = maxDim * orb.sizeScale * (0.55 + Math.sin(now * 0.001 + i) * 0.15);
+        const settledRadius = maxDim * orb.sizeScale * 0.6;
+        const radius = settledRadius + (dynRadius - settledRadius) * progress;
+        
+        // Alpha dims slightly when settled
+        const dynAlpha = dark 
+            ? 0.45 + Math.sin(now * 0.0008 + i) * 0.15 
+            : 0.65 + Math.sin(now * 0.0008 + i) * 0.15;
+        const settledAlpha = dark ? 0.35 : 0.55;
+        const alpha = settledAlpha + (dynAlpha - settledAlpha) * progress;
+
+        drawOrb(x, y, radius, orb.color, alpha);
+      });
+      
+      if (!isComplete) {
+        animationFrameId = requestAnimationFrame(draw);
+      }
     }
 
     resize();
-    startedAt = performance.now();
-    draw(startedAt);
-    frame = window.requestAnimationFrame(tick);
     window.addEventListener("resize", resize);
-    document.addEventListener("visibilitychange", onVisibilityChange);
+    animationFrameId = requestAnimationFrame(draw);
 
     return () => {
-      window.cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
+      cancelAnimationFrame(animationFrameId);
     };
-  }, [animationKey, dark]);
+  }, [currentTheme.id, dark]);
 
   return (
     <div
       aria-hidden="true"
-      className="login-animated-bg"
-      style={themeDrivenGlow}
+      className="absolute inset-0 overflow-hidden pointer-events-none z-0"
     >
-      <canvas ref={canvasRef} className="login-animated-bg__canvas" />
-      <div className="login-animated-bg__wash" />
+      <canvas 
+        ref={canvasRef} 
+        className="absolute inset-0 w-full h-full scale-[1.2]" 
+        style={{ filter: "blur(60px)", opacity: dark ? 0.8 : 0.5, transition: "opacity 0.5s ease" }} 
+      />
     </div>
   );
 }

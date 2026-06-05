@@ -14,7 +14,11 @@ export type ThemeId =
   | "twitch-stream"
   | "synthwave"
   | "trust-blue"
-  | "vercel-minimal";
+  | "vercel-minimal"
+  | "cream-coral"
+  | "cohere-design"
+  | "elevenlabs"
+  | "minimax-design";
 
 export interface Theme {
   id: ThemeId;
@@ -96,6 +100,30 @@ export const THEMES: Theme[] = [
     description: "ขาว-ดำ · minimal clean",
     swatches: ["#FFFFFF", "#171717", "#FF5B4F"],
   },
+  {
+    id: "cream-coral",
+    name: "Cream Coral",
+    description: "ครีม-คอรัล · warm editorial",
+    swatches: ["#FAF9F5", "#CC785C", "#E8A55A"],
+  },
+  {
+    id: "cohere-design",
+    name: "Cohere Design",
+    description: "ขาว-ดำเข้ม · enterprise AI",
+    swatches: ["#FFFFFF", "#17171C", "#003C33"],
+  },
+  {
+    id: "elevenlabs",
+    name: "ElevenLabs",
+    description: "ออฟไวท์-หมึก · editorial AI",
+    swatches: ["#F5F5F5", "#0C0A09", "#C8B8E0"],
+  },
+  {
+    id: "minimax-design",
+    name: "MiniMax Design",
+    description: "ขาว-ดำ · stark gradient AI",
+    swatches: ["#FFFFFF", "#000000", "#FF4A4A"],
+  },
 ];
 
 interface ThemeContextType {
@@ -104,6 +132,8 @@ interface ThemeContextType {
   dark: boolean;
   toggleDark: () => void;
   currentTheme: Theme;
+  menuLayout: "side" | "top";
+  toggleMenuLayout: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
@@ -121,11 +151,18 @@ function applyToDOM(id: ThemeId, isDark: boolean) {
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [themeId, setThemeId] = useState<ThemeId>("default");
   const [dark, setDark] = useState(false);
+  const [menuLayout, setMenuLayout] = useState<"side" | "top">("side");
 
   useEffect(() => {
     const savedTheme = (localStorage.getItem("sml-theme") ?? "default") as ThemeId;
     const savedDark = localStorage.getItem("sml-dark") === "true";
     const validTheme = THEMES.find((t) => t.id === savedTheme) ? savedTheme : "default";
+    
+    const savedMenuLayout = localStorage.getItem("sml-menu-layout");
+    if (savedMenuLayout === "side" || savedMenuLayout === "top") {
+      setMenuLayout(savedMenuLayout);
+    }
+
     setThemeId(validTheme);
     setDark(savedDark);
     applyToDOM(validTheme, savedDark);
@@ -144,10 +181,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     applyToDOM(themeId, next);
   }
 
+  function toggleMenuLayout() {
+    const next = menuLayout === "side" ? "top" : "side";
+    setMenuLayout(next);
+    localStorage.setItem("sml-menu-layout", next);
+  }
+
   const currentTheme = THEMES.find((t) => t.id === themeId)!;
 
   return (
-    <ThemeContext.Provider value={{ themeId, setTheme, dark, toggleDark, currentTheme }}>
+    <ThemeContext.Provider value={{ themeId, setTheme, dark, toggleDark, currentTheme, menuLayout, toggleMenuLayout }}>
       {children}
     </ThemeContext.Provider>
   );

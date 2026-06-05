@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, LogOut, Moon, RefreshCw, Sun, Zap } from "lucide-react";
+import { Bell, LogOut, Moon, RefreshCw, Sun, Zap, PanelLeft, PanelTop } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeSelector } from "@/components/ui/theme-selector";
@@ -15,7 +16,7 @@ type TopbarProps = {
 
 export function Topbar({ user_name, db_name, db_code }: TopbarProps) {
   const router = useRouter();
-  const { dark, toggleDark } = useTheme();
+  const { dark, toggleDark, menuLayout, toggleMenuLayout } = useTheme();
   const [dateLabel, setDateLabel] = useState("");
   const initial = user_name.trim().charAt(0) || "U";
 
@@ -45,12 +46,14 @@ export function Topbar({ user_name, db_name, db_code }: TopbarProps) {
   return (
     <header className="z-[200] flex h-[60px] shrink-0 items-center gap-4 rounded-lg bg-surface px-4 shadow-micro md:px-5">
       <div className="hidden items-center gap-2.5 md:flex">
-        <div className="grid h-8 w-8 place-items-center rounded-md bg-accent text-text-on-accent">
-          <Zap className="h-4 w-4" aria-hidden="true" />
-        </div>
-        <span className="font-mono text-xs font-medium tracking-[0.1em] text-text-primary">
-          SML MIS AI
-        </span>
+        <Link href="/dashboard" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
+          <div className="grid h-8 w-8 place-items-center rounded-md bg-accent text-text-on-accent">
+            <Zap className="h-4 w-4" aria-hidden="true" />
+          </div>
+          <span className="font-mono text-xs font-medium tracking-[0.1em] text-text-primary">
+            SML MIS AI
+          </span>
+        </Link>
         <div className="ml-3 h-7 w-px bg-border" aria-hidden="true" />
       </div>
 
@@ -81,6 +84,18 @@ export function Topbar({ user_name, db_name, db_code }: TopbarProps) {
 
       <div className="flex items-center gap-2">
         <ThemeSelector />
+
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={toggleMenuLayout}
+          aria-label={menuLayout === "side" ? "ย้ายเมนูไปด้านบน" : "ย้ายเมนูไปด้านข้าง"}
+          title={menuLayout === "side" ? "ย้ายเมนูไปด้านบน" : "ย้ายเมนูไปด้านข้าง"}
+          className="h-9 w-9 bg-surface-muted text-text-tertiary hover:bg-surface-sunken hover:text-accent"
+        >
+          {menuLayout === "side" ? <PanelTop className="h-4 w-4" /> : <PanelLeft className="h-4 w-4" />}
+        </Button>
 
         <Button
           type="button"

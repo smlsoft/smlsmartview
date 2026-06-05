@@ -51,9 +51,9 @@ const config: Config = {
         focus: "var(--shadow-focus)"
       },
       fontFamily: {
-        sans: ["Work Sans", "Noto Sans Thai", "system-ui", "sans-serif"],
-        display: ["DM Serif Display", "Georgia", "serif"],
-        mono: ["IBM Plex Mono", "ui-monospace", "SFMono-Regular", "monospace"]
+        sans: ["Work Sans", "DM Sans", "Unica77 Cohere Web", "Inter", "StyreneB", "Noto Sans Thai", "system-ui", "sans-serif"],
+        display: ["DM Serif Display", "DM Sans", "Waldenburg Light", "EB Garamond", "GT Sectra", "CohereText", "Space Grotesk", "Copernicus", "Tiempos Headline", "Cormorant Garamond", "Georgia", "serif"],
+        mono: ["IBM Plex Mono", "CohereMono", "JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"]
       },
       maxWidth: {
         canvas: "1680px"
