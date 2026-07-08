@@ -38,6 +38,7 @@ pnpm install
 ```env
 # Session secret (32+ chars)
 SESSION_SECRET=your-secret-key-here
+SESSION_COOKIE_SECURE=false
 
 # Default DB (optional — user เลือกได้ตอน login)
 DB_HOST=localhost
@@ -65,6 +66,39 @@ pnpm start
 
 ## Docker Deployment
 
+### Production server แบบดึง image จาก GHCR
+
+ใช้วิธีนี้บน server ที่ไม่ต้องการเก็บ source code หรือ build เอง
+
+```bash
+# ครั้งแรกครั้งเดียว ถ้า package เป็น private
+docker login ghcr.io
+
+# ต้องมีไฟล์ docker-compose.deploy.yml และ .env อยู่บน server
+docker compose -f docker-compose.deploy.yml pull
+docker compose -f docker-compose.deploy.yml up -d
+```
+
+แอปจะขึ้นที่ `http://your-server-ip:3618`
+
+เวลาอัปเดต version ใหม่:
+
+```bash
+docker compose -f docker-compose.deploy.yml pull
+docker compose -f docker-compose.deploy.yml up -d --force-recreate
+```
+
+ดู log / สถานะ:
+
+```bash
+docker compose -f docker-compose.deploy.yml logs -f app
+docker compose -f docker-compose.deploy.yml ps
+```
+
+---
+
+## Docker Build จาก source
+
 ### Prerequisites
 - Docker + Docker Compose
 
@@ -72,9 +106,11 @@ pnpm start
 
 ```env
 SESSION_SECRET=your-secret-key-min-32-chars-here
+SESSION_COOKIE_SECURE=false
 ```
 
 > DB จะ connect ผ่าน network ไปยัง SMLERP server โดยตรง (ไม่ได้รัน PostgreSQL ใน container)
+> ถ้าเปิดผ่าน HTTPS ให้ตั้ง `SESSION_COOKIE_SECURE=true`; ถ้าเปิดผ่าน HTTP ใน LAN เช่น `http://192.168.x.x:3618` ให้ใช้ `false`
 
 ### 2. Build image
 
@@ -98,9 +134,6 @@ docker compose logs -f app
 
 # หยุด
 docker compose down
-
-# Pull image ใหม่แล้ว restart
-docker compose pull && docker compose up -d --force-recreate
 
 # ดูสถานะ health
 docker compose ps
@@ -186,13 +219,11 @@ docker run -d \
   ghcr.io/smlsoft/smlsmartview:latest
 ```
 
-หรือใช้ใน `docker-compose.yml` แทน build:
+หรือใช้ `docker-compose.deploy.yml` สำหรับ server:
 
-```yaml
-services:
-  app:
-    image: ghcr.io/smlsoft/smlsmartview:latest
-    # ลบ build: section ออก
+```bash
+docker compose -f docker-compose.deploy.yml pull
+docker compose -f docker-compose.deploy.yml up -d
 ```
 
 ---
@@ -205,4 +236,3 @@ services:
 - **ห้าม** mutate ข้อมูล SMLERP production จาก dashboard code
 
 ---
-

@@ -1,9 +1,12 @@
+# Server-side production compose - pull the prebuilt image from GHCR.
+# Usage:
+#   docker login ghcr.io
+#   docker compose -f docker-compose.deploy.yml pull
+#   docker compose -f docker-compose.deploy.yml up -d
+
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: sml-mis-ai:latest
+    image: ghcr.io/smlsoft/smlsmartview:latest
     container_name: sml-mis-ai
     restart: unless-stopped
     ports:
