@@ -111,7 +111,6 @@ function LoginInner() {
         return;
       }
       router.replace(redirectTo);
-      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "เชื่อมต่อไม่สำเร็จ");
     } finally {

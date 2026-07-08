@@ -1,19 +1,22 @@
+import { Suspense } from "react";
 import { getSession } from "@/lib/auth-helpers";
 import { getExecutiveDashboard } from "@/lib/queries/dashboard";
 import { ExecutiveDashboard } from "@/components/dashboard/ExecutiveDashboard";
+import { DashboardLoading } from "@/components/dashboard/DashboardLoading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardPage() {
-  const session = await getSession();
-
+async function DashboardData({
+  providerCode,
+  dbCode
+}: {
+  providerCode: string;
+  dbCode: string;
+}) {
   try {
-    const data = await getExecutiveDashboard(
-      session.provider_code,
-      session.db_code
-    );
+    const data = await getExecutiveDashboard(providerCode, dbCode);
     return <ExecutiveDashboard data={data} />;
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
@@ -31,4 +34,17 @@ export default async function DashboardPage() {
       </Card>
     );
   }
+}
+
+export default async function DashboardPage() {
+  const session = await getSession();
+
+  return (
+    <Suspense fallback={<DashboardLoading />}>
+      <DashboardData
+        providerCode={session.provider_code}
+        dbCode={session.db_code}
+      />
+    </Suspense>
+  );
 }
