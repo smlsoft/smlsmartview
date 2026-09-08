@@ -10,13 +10,19 @@ export const dynamic = "force-dynamic";
 
 async function DashboardData({
   providerCode,
-  dbCode
+  dbCode,
+  filters
 }: {
   providerCode: string;
   dbCode: string;
+  filters?: {
+    preset?: string;
+    from?: string;
+    to?: string;
+  };
 }) {
   try {
-    const data = await getExecutiveDashboard(providerCode, dbCode);
+    const data = await getExecutiveDashboard(providerCode, dbCode, filters);
     return <ExecutiveDashboard data={data} />;
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
@@ -36,14 +42,28 @@ async function DashboardData({
   }
 }
 
-export default async function DashboardPage() {
+type DashboardPageProps = {
+  searchParams?: Promise<{
+    preset?: string;
+    from?: string;
+    to?: string;
+  }>;
+};
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const session = await getSession();
+  const params = (await searchParams) ?? {};
 
   return (
     <Suspense fallback={<DashboardLoading />}>
       <DashboardData
         providerCode={session.provider_code}
         dbCode={session.db_code}
+        filters={{
+          preset: params.preset,
+          from: params.from,
+          to: params.to
+        }}
       />
     </Suspense>
   );

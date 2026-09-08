@@ -23,6 +23,7 @@ import type {
   TrendPoint
 } from "@/lib/queries/dashboard";
 import { cn } from "@/lib/utils";
+import { DashboardFilterBar } from "@/components/dashboard/DashboardFilterBar";
 
 type ExecutiveDashboardProps = {
   data: ExecutiveDashboardData;
@@ -56,7 +57,7 @@ function formatMoneyFull(value: number) {
 }
 
 function formatPct(value: number | null) {
-  if (value === null || !Number.isFinite(value)) return "ฐานใหม่";
+  if (value === null || !Number.isFinite(value)) return "ไม่มีข้อมูลเทียบ";
   const sign = value >= 0 ? "+" : "";
   return `${sign}${value.toFixed(1)}%`;
 }
@@ -91,7 +92,14 @@ function KpiDeltaChip({
   if (label) {
     return <span className="rounded-pill bg-surface-muted px-2.5 py-1 text-[11px] font-semibold text-text-tertiary">{label}</span>;
   }
-  const positive = value === null || value === undefined || value >= 0;
+  if (value === null || value === undefined) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-pill bg-surface-muted px-2.5 py-1 text-[11px] font-semibold tabular-nums text-text-tertiary">
+        {formatPct(null)}
+      </span>
+    );
+  }
+  const positive = value >= 0;
   const Icon = positive ? ArrowUpRight : ArrowDownRight;
   return (
     <span
@@ -101,7 +109,7 @@ function KpiDeltaChip({
       )}
     >
       <Icon className="h-3 w-3" aria-hidden="true" />
-      {formatPct(value ?? null)}
+      {formatPct(value)}
     </span>
   );
 }
@@ -121,7 +129,7 @@ function KpiStrip({ data }: { data: ExecutiveDashboardData }) {
       sub: `บาท · ${formatNumber(data.bills.current)} บิล`,
       icon: ReceiptText,
       delta: data.sales.delta_pct,
-      extra: "vs เดือนก่อน"
+      extra: "เทียบปีก่อน"
     },
     {
       label: "กำไรขั้นต้น",
@@ -704,9 +712,13 @@ export function ExecutiveDashboard({ data }: ExecutiveDashboardProps) {
             ภาพรวมกิจการ
           </h1>
           <p className="mt-3 text-sm text-text-secondary">
-            ข้อมูลถึง {formatDate(data.period.as_of_date)} · ช่วงเดือน{" "}
-            {formatDate(data.period.current_start)} ถึง{" "}
-            {formatExclusiveEndDate(data.period.current_end)}
+            ข้อมูลถึง {formatDate(data.period.as_of_date)} · {data.period.preset_label}{" "}
+            {formatDate(data.period.start_date)} ถึง{" "}
+            {formatDate(data.period.end_date)}{" "}
+            <span className="text-text-tertiary">
+              (เทียบช่วงเดียวกันปีก่อน: {formatDate(data.period.previous_start_date)} ถึง{" "}
+              {formatDate(data.period.previous_end_date)})
+            </span>
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -715,15 +727,20 @@ export function ExecutiveDashboard({ data }: ExecutiveDashboardProps) {
         </div>
       </section>
 
+      <DashboardFilterBar period={data.period} />
+
       <section className="grid grid-cols-12 gap-4">
         <KpiStrip data={data} />
 
-        <AreaChartCard trend={data.trend} asOf={data.period.as_of_date} />
+        <AreaChartCard trend={data.trend} asOf={data.period.end_date} />
         <DoughnutCard rows={data.branch_mix} asOf={data.period.as_of_date} />
 
         <Card className="premium-surface col-span-12 p-6 lg:col-span-4">
           <CardHeader className="space-y-0 p-0">
-            <CardTitle>ตัวเลขรองที่ต้องดูคู่กัน</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>ตัวเลขรองที่ต้องดูคู่กัน</CardTitle>
+              <span className="text-xs text-text-tertiary">เทียบช่วงเดียวกันปีก่อน</span>
+            </div>
           </CardHeader>
           <CardContent className="grid gap-4 p-0 pt-6">
             {secondaryMetrics.map(({ label, value, delta, icon: Icon, format }) => (
