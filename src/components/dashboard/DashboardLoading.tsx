@@ -12,20 +12,14 @@ function LoadingBlock({ className = "" }: { className?: string }) {
 export function DashboardLoading() {
   return (
     <div className="space-y-4">
-      <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div className="min-w-0">
-          <p className="label-caps text-text-tertiary">กำลังโหลดข้อมูล</p>
-          <h1 className="font-display mt-2 text-[34px] leading-[42px] tracking-normal text-text-primary">
-            ภาพรวมกิจการ
-          </h1>
-          <p className="mt-3 text-sm text-text-secondary">
-            กำลังอ่านข้อมูลจากฐาน SMLERP
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <LoadingBlock className="h-8 w-24 rounded-pill" />
-          <LoadingBlock className="h-8 w-24 rounded-pill" />
-        </div>
+      <section>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          ภาพรวมกิจการ
+        </h1>
+        <p className="mt-1 flex items-center gap-1.5 text-xs text-text-tertiary">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-success animate-pulse" aria-hidden="true" />
+          <span>กำลังอ่านข้อมูลจากฐาน SMLERP...</span>
+        </p>
       </section>
 
       <section className="grid grid-cols-12 gap-4" aria-busy="true">

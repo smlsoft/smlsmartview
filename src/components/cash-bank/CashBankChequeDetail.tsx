@@ -90,24 +90,19 @@ export function CashBankChequeDetail({ data, backHref }: CashBankChequeDetailPro
           </Link>
         </Button>
         <div className="flex flex-wrap gap-2">
-          <StatusChip variant="info">
-            <Banknote className="h-3.5 w-3.5" aria-hidden="true" />
-            {chequeTypeLabel}
-          </StatusChip>
           {chequeStatus(cheque.status)}
         </div>
       </div>
 
-      <section className="flex flex-col gap-4">
-        <div className="min-w-0">
-          <p className="label-caps text-text-tertiary">{data.company_name}</p>
-          <h1 className="font-display mt-2 break-all text-[34px] leading-[42px] tracking-normal text-text-primary">
-            {cheque.chq_number}
-          </h1>
-          <p className="mt-3 text-sm text-text-secondary">
-            {chequeTypeLabel} · ครบกำหนด {formatDate(cheque.chq_due_date)}
-          </p>
-        </div>
+      <section>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary sm:text-3xl break-all">
+          {cheque.chq_number}
+        </h1>
+        <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-text-tertiary">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+          <span>{chequeTypeLabel}</span>
+          <span>· ครบกำหนด {formatDate(cheque.chq_due_date)}</span>
+        </p>
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">

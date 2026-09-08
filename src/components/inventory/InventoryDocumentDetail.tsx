@@ -315,24 +315,17 @@ export function InventoryDocumentDetail({
             กลับรายการ
           </Link>
         </Button>
-        <div className="flex flex-wrap gap-2">
-          <StatusChip variant={movementVariant(data.selected_menu.movement)}>
-            {movementLabel(data.selected_menu.movement)}
-          </StatusChip>
-          <StatusChip variant="neutral">Read only</StatusChip>
-        </div>
       </div>
 
-      <section className="flex flex-col gap-4">
-        <div className="min-w-0">
-          <p className="label-caps text-text-tertiary">{data.company_name}</p>
-          <h1 className="font-display mt-2 text-[34px] leading-[42px] tracking-normal text-text-primary">
-            รายละเอียดเอกสารสินค้า
-          </h1>
-          <p className="mt-3 text-sm text-text-secondary">
-            {data.selected_menu.label} · {formatDate(data.header.doc_date)}
-          </p>
-        </div>
+      <section>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          รายละเอียดเอกสารสินค้า
+        </h1>
+        <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-text-tertiary">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+          <span>{data.selected_menu.label}</span>
+          <span>· วันที่ {formatDate(data.header.doc_date)}</span>
+        </p>
       </section>
 
       <DocumentOverview header={data.header} />

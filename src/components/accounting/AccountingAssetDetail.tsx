@@ -78,22 +78,18 @@ export function AccountingAssetDetail({ data, backHref }: AccountingAssetDetailP
           </Link>
         </Button>
         <div className="flex flex-wrap gap-2">
-          <StatusChip variant="info">
-            <Landmark className="h-3.5 w-3.5" aria-hidden="true" />
-            as_asset
-          </StatusChip>
           {assetStatus(asset.status)}
         </div>
       </div>
 
-      <section className="flex flex-col gap-4">
-        <div className="min-w-0">
-          <p className="label-caps text-text-tertiary">{data.company_name}</p>
-          <h1 className="font-display mt-2 break-words text-[34px] leading-[42px] tracking-normal text-text-primary">
-            {asset.name_1 || asset.code}
-          </h1>
-          <p className="mt-3 font-mono text-sm text-text-secondary">{asset.code}</p>
-        </div>
+      <section>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary sm:text-3xl break-words">
+          {asset.name_1 || asset.code}
+        </h1>
+        <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-text-tertiary">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+          <span className="font-mono">{asset.code}</span>
+        </p>
       </section>
 
       <section className="grid gap-4 md:grid-cols-4">

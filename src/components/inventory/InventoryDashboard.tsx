@@ -5,7 +5,7 @@ import {
 import Link from "next/link";
 import { DocumentStatusChips } from "@/components/erp/DocumentStatusChips";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { StatusChip } from "@/components/ui/status-chip";
 import type {
@@ -128,18 +128,8 @@ function FilterBar({ data }: { data: InventoryDashboardData }) {
 function DocumentsTable({ data }: { data: InventoryDashboardData }) {
   return (
     <Card className="overflow-hidden p-0">
-      <CardHeader className="flex flex-col gap-3 p-6 pb-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <CardTitle>{data.selected_menu.label}</CardTitle>
-            <StatusChip variant={movementVariant(data.selected_menu)}>
-              {movementLabel(data.selected_menu)}
-            </StatusChip>
-          </div>
-          <p className="mt-2 text-sm text-text-secondary">
-            {formatDate(data.period.start_date)} ถึง {formatDate(data.period.end_date)}
-          </p>
-        </div>
+      <CardHeader className="flex flex-row items-center justify-between gap-4 px-6 py-3.5">
+        <span className="text-sm font-semibold text-text-secondary">รายการเอกสาร</span>
         <StatusChip variant="neutral">{formatNumber(data.documents.length)} rows</StatusChip>
       </CardHeader>
       <CardContent className="p-0">
@@ -240,21 +230,20 @@ function DocumentsTable({ data }: { data: InventoryDashboardData }) {
 export function InventoryDashboard({ data }: InventoryDashboardProps) {
   return (
     <div className="space-y-4">
-      <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="label-caps text-text-tertiary">{data.company_name}</p>
-          <h1 className="font-display mt-2 text-[34px] leading-[42px] tracking-normal text-text-primary">
-            ระบบสินค้า
+      <section>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+            {data.selected_menu.label}
           </h1>
-          <p className="mt-3 text-sm text-text-secondary">
-            ข้อมูลถึง {formatDate(data.period.as_of_date)} · ช่วงเอกสาร{" "}
-            {formatDate(data.period.start_date)} ถึง {formatDate(data.period.end_date)}
-          </p>
+          <StatusChip variant={movementVariant(data.selected_menu)}>
+            {movementLabel(data.selected_menu)}
+          </StatusChip>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <StatusChip variant="info">Inventory</StatusChip>
-          <StatusChip variant="neutral">Read only</StatusChip>
-        </div>
+        <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-text-tertiary">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+          <span>ข้อมูลล่าสุด ณ วันที่ {formatDate(data.period.as_of_date)}</span>
+          <span>· ช่วงเอกสาร {formatDate(data.period.start_date)} ถึง {formatDate(data.period.end_date)}</span>
+        </p>
       </section>
 
       <FilterBar data={data} />

@@ -58,29 +58,14 @@ export function Topbar({ user_name, db_name, db_code }: TopbarProps) {
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="font-display truncate text-lg leading-5 text-text-primary">
-          สวัสดี, <span className="text-accent">{user_name}</span>
+        <p className="font-display truncate text-base font-bold leading-5 text-text-primary sm:text-lg">
+          {db_name}
         </p>
         <p className="mt-1 truncate text-[11.5px] text-text-tertiary">
-          {dateLabel || "กำลังอ่านเวลาจากเครื่อง"} · {db_name} ({db_code})
+          {dateLabel || "กำลังอ่านเวลาจากเครื่อง"}
         </p>
       </div>
 
-      <div className="hidden rounded-md bg-surface-muted p-0.5 md:flex">
-        {["วันนี้", "เดือนนี้", "ปีนี้"].map((label) => (
-          <button
-            key={label}
-            type="button"
-            className={
-              label === "เดือนนี้"
-                ? "rounded-sm bg-surface px-3 py-1.5 text-xs font-semibold text-accent shadow-[0_1px_4px_rgba(139,94,60,0.12)]"
-                : "rounded-sm px-3 py-1.5 text-xs font-medium text-text-tertiary transition-colors hover:text-text-primary"
-            }
-          >
-            {label}
-          </button>
-        ))}
-      </div>
 
       <div className="flex items-center gap-2">
         <ThemeSelector />

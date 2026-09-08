@@ -369,7 +369,7 @@ function DoughnutCard({
         </div>
         <div className="space-y-3">
           {rows.map((row, index) => (
-            <div key={row.code} className="flex min-w-0 items-center gap-3">
+            <div key={`${row.code}-${index}`} className="flex min-w-0 items-center gap-3">
               <span
                 className="h-2.5 w-2.5 rounded-pill"
                 style={{ background: colors[index % colors.length] }}
@@ -399,8 +399,8 @@ function DoughnutCard({
               </tr>
             </thead>
             <tbody>
-              {rows.map((row) => (
-                <tr key={row.code}>
+              {rows.map((row, index) => (
+                <tr key={`${row.code}-${index}`}>
                   <td>{row.name}</td>
                   <td>{row.amount}</td>
                   <td>{row.pct ?? 0}</td>
@@ -467,8 +467,8 @@ function RankingList({
         <Icon className="h-5 w-5 text-text-tertiary" aria-hidden="true" />
       </CardHeader>
       <CardContent className="space-y-4 p-0 pt-6">
-        {rows.map((row) => (
-          <div key={row.code} className="space-y-2">
+        {rows.map((row, index) => (
+          <div key={`${row.code}-${index}`} className="space-y-2">
             <div className="flex items-center justify-between gap-3">
               <p className="line-clamp-2 text-sm font-medium leading-5 text-text-primary">
                 {row.name}
@@ -513,9 +513,9 @@ function ProductTable({
           <span className="label-caps text-right text-text-tertiary">GP</span>
         </div>
         <div className="divide-y divide-border">
-          {rows.map((row) => (
+          {rows.map((row, index) => (
             <div
-              key={row.code}
+              key={`${row.code}-${index}`}
               className="grid min-h-16 grid-cols-[minmax(0,1fr)_76px_76px_56px] items-center gap-2 px-3 py-4"
             >
               <div className="min-w-0">
@@ -551,8 +551,8 @@ function ProductTable({
               </tr>
             </thead>
             <tbody>
-              {rows.map((row) => (
-                <tr key={row.code}>
+              {rows.map((row, index) => (
+                <tr key={`${row.code}-${index}`}>
                   <td>{row.name}</td>
                   <td>{row.sales}</td>
                   <td>{row.gross_profit}</td>
@@ -594,8 +594,8 @@ function DebtCard({
         </StatusChip>
       </CardHeader>
       <CardContent className="space-y-4 p-0 pt-6">
-        {rows.map((row) => (
-          <div key={row.code} className="flex items-center justify-between gap-4">
+        {rows.map((row, index) => (
+          <div key={`${row.code}-${index}`} className="flex items-center justify-between gap-4">
             <div className="min-w-0">
               <p className="line-clamp-2 text-sm font-medium leading-5 text-text-primary">
                 {row.name}
@@ -640,8 +640,8 @@ function InventoryList({
             {emptyLabel}
           </p>
         ) : (
-          rows.map((row) => (
-            <div key={row.code} className="flex items-center justify-between gap-4">
+          rows.map((row, index) => (
+            <div key={`${row.code}-${index}`} className="flex items-center justify-between gap-4">
               <div className="min-w-0">
                 <p className="line-clamp-2 text-sm font-medium leading-5 text-text-primary">
                   {row.name}
@@ -705,26 +705,14 @@ export function ExecutiveDashboard({ data }: ExecutiveDashboardProps) {
 
   return (
     <div className="space-y-4">
-      <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="label-caps text-text-tertiary">{data.company_name}</p>
-          <h1 className="font-display mt-2 text-[34px] leading-[42px] tracking-normal text-text-primary">
-            ภาพรวมกิจการ
-          </h1>
-          <p className="mt-3 text-sm text-text-secondary">
-            ข้อมูลถึง {formatDate(data.period.as_of_date)} · {data.period.preset_label}{" "}
-            {formatDate(data.period.start_date)} ถึง{" "}
-            {formatDate(data.period.end_date)}{" "}
-            <span className="text-text-tertiary">
-              (เทียบช่วงเดียวกันปีก่อน: {formatDate(data.period.previous_start_date)} ถึง{" "}
-              {formatDate(data.period.previous_end_date)})
-            </span>
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <StatusChip variant="info">Executive</StatusChip>
-          <StatusChip variant="neutral">Read only</StatusChip>
-        </div>
+      <section>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          ภาพรวมกิจการ
+        </h1>
+        <p className="mt-1 flex items-center gap-1.5 text-xs text-text-tertiary">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+          <span>ข้อมูลล่าสุด ณ วันที่ {formatDate(data.period.as_of_date)}</span>
+        </p>
       </section>
 
       <DashboardFilterBar period={data.period} />

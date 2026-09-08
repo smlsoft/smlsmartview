@@ -604,7 +604,7 @@ async function getProducts(
       FROM (
         SELECT
           d.item_code AS code,
-          COALESCE(NULLIF(i.name_1, ''), NULLIF(d.item_name, ''), d.item_code) AS name,
+          COALESCE(NULLIF(i.name_1, ''), MAX(NULLIF(d.item_name, '')), d.item_code) AS name,
           COALESCE(SUM(d.qty), 0) AS qty,
           COALESCE(SUM(d.sum_amount), 0) AS sales,
           COALESCE(SUM(d.sum_of_cost), 0) AS cost,
@@ -626,7 +626,7 @@ async function getProducts(
           AND COALESCE(d.last_status, 0) = 0
           AND COALESCE(d.item_type, 0) NOT IN (3, 5)
           AND t.last_status = 0
-        GROUP BY d.item_code, i.name_1, d.item_name
+        GROUP BY d.item_code, i.name_1
         HAVING COALESCE(SUM(d.sum_amount), 0) > 0
       ) product_sales
       ORDER BY ${orderSql}

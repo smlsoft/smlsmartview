@@ -97,32 +97,23 @@ function MasterFilter({
 }
 
 function PageHeading({
-  companyName,
   title,
-  description,
-  icon: Icon
+  description
 }: {
-  companyName: string;
+  companyName?: string;
   title: string;
   description: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
 }) {
   return (
-    <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-      <div>
-        <p className="label-caps text-text-tertiary">{companyName}</p>
-        <h1 className="font-display mt-2 text-[34px] leading-[42px] tracking-normal text-text-primary">
-          {title}
-        </h1>
-        <p className="mt-3 text-sm text-text-secondary">{description}</p>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        <StatusChip variant="info">
-          <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-          ระบบสินค้า
-        </StatusChip>
-        <StatusChip variant="neutral">อ่านอย่างเดียว</StatusChip>
-      </div>
+    <section>
+      <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+        {title}
+      </h1>
+      <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-text-tertiary">
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+        <span>{description}</span>
+      </p>
     </section>
   );
 }
@@ -130,12 +121,9 @@ function PageHeading({
 function ItemsTable({ items }: { items: InventoryItem[] }) {
   return (
     <Card className="overflow-hidden p-0">
-      <CardHeader className="flex flex-row items-start justify-between gap-4 p-6 pb-4">
-        <div>
-          <CardTitle>รายการสินค้า</CardTitle>
-          <p className="mt-2 text-sm text-text-secondary">{formatNumber(items.length)} rows</p>
-        </div>
-        <Boxes className="h-5 w-5 text-text-tertiary" aria-hidden="true" />
+      <CardHeader className="flex flex-row items-center justify-between gap-4 px-6 py-3.5">
+        <span className="text-sm font-semibold text-text-secondary">รายการสินค้าทั้งหมด</span>
+        <StatusChip variant="neutral">{formatNumber(items.length)} rows</StatusChip>
       </CardHeader>
       <CardContent className="p-0">
         <div className="overflow-x-auto premium-scrollbar">
@@ -221,12 +209,9 @@ function ItemsTable({ items }: { items: InventoryItem[] }) {
 function PricesTable({ prices, itemLinks = true }: { prices: InventoryPrice[]; itemLinks?: boolean }) {
   return (
     <Card className="overflow-hidden p-0">
-      <CardHeader className="flex flex-row items-start justify-between gap-4 p-6 pb-4">
-        <div>
-          <CardTitle>ราคาขายสินค้า</CardTitle>
-          <p className="mt-2 text-sm text-text-secondary">{formatNumber(prices.length)} rows</p>
-        </div>
-        <Tags className="h-5 w-5 text-text-tertiary" aria-hidden="true" />
+      <CardHeader className="flex flex-row items-center justify-between gap-4 px-6 py-3.5">
+        <span className="text-sm font-semibold text-text-secondary">ตารางราคาขายทั้งหมด</span>
+        <StatusChip variant="neutral">{formatNumber(prices.length)} rows</StatusChip>
       </CardHeader>
       <CardContent className="p-0">
         <div className="overflow-x-auto premium-scrollbar">
@@ -431,17 +416,16 @@ export function InventoryItemDetailView({
             กลับรายการสินค้า
           </Link>
         </Button>
-        <StatusChip variant="neutral">อ่านอย่างเดียว</StatusChip>
       </div>
 
-      <section className="flex flex-col gap-4">
-        <div className="min-w-0">
-          <p className="label-caps text-text-tertiary">{data.company_name}</p>
-          <h1 className="font-display mt-2 break-all text-[34px] leading-[42px] tracking-normal text-text-primary">
-            {item.code}
-          </h1>
-          <p className="mt-3 text-sm text-text-secondary">{item.name_1 || "รายละเอียดสินค้า"}</p>
-        </div>
+      <section>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary sm:text-3xl break-all">
+          {item.code}
+        </h1>
+        <p className="mt-1 flex items-center gap-1.5 text-xs text-text-tertiary">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+          <span>{item.name_1 || "รายละเอียดสินค้า"}</span>
+        </p>
       </section>
 
       <Card className="p-6">

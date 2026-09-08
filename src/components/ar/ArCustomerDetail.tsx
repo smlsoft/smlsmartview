@@ -81,22 +81,18 @@ export function ArCustomerDetail({ data, backHref }: ArCustomerDetailProps) {
           </Link>
         </Button>
         <div className="flex flex-wrap gap-2">
-          <StatusChip variant="info">
-            <Landmark className="h-3.5 w-3.5" aria-hidden="true" />
-            ข้อมูลลูกหนี้
-          </StatusChip>
           {statusChip(customer.status)}
         </div>
       </div>
 
-      <section className="flex flex-col gap-4">
-        <div className="min-w-0">
-          <p className="label-caps text-text-tertiary">{data.company_name}</p>
-          <h1 className="font-display mt-2 break-words text-[34px] leading-[42px] tracking-normal text-text-primary">
-            {customer.name_1 || customer.code}
-          </h1>
-          <p className="mt-3 font-mono text-sm text-text-secondary">{customer.code}</p>
-        </div>
+      <section>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary sm:text-3xl break-words">
+          {customer.name_1 || customer.code}
+        </h1>
+        <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-text-tertiary">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+          <span className="font-mono">{customer.code}</span>
+        </p>
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">

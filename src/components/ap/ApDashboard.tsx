@@ -2,7 +2,7 @@ import { CalendarDays, HandCoins, Search } from "lucide-react";
 import Link from "next/link";
 import { DocumentStatusChips } from "@/components/erp/DocumentStatusChips";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { StatusChip } from "@/components/ui/status-chip";
 import type { ApDashboardData, ApDocument, ApMenu, ApSupplier } from "@/lib/queries/ap";
@@ -149,18 +149,8 @@ function DocumentFilter({ data }: { data: ApDashboardData }) {
 function SuppliersTable({ data }: { data: ApDashboardData }) {
   return (
     <Card className="overflow-hidden p-0">
-      <CardHeader className="flex flex-col gap-3 p-6 pb-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <CardTitle>{data.selected_menu.label}</CardTitle>
-            <StatusChip variant={stageVariant(data.selected_menu.stage)}>
-              {data.selected_menu.stage}
-            </StatusChip>
-          </div>
-          <p className="mt-2 text-sm text-text-secondary">
-            แสดงจากตาราง ap_supplier
-          </p>
-        </div>
+      <CardHeader className="flex flex-row items-center justify-between gap-4 px-6 py-3.5">
+        <span className="text-sm font-semibold text-text-secondary">รายชื่อเจ้าหนี้</span>
         <StatusChip variant="neutral">{formatNumber(data.suppliers.length)} rows</StatusChip>
       </CardHeader>
       <CardContent className="p-0">
@@ -234,18 +224,8 @@ function SuppliersTable({ data }: { data: ApDashboardData }) {
 function DocumentsTable({ data }: { data: ApDashboardData }) {
   return (
     <Card className="overflow-hidden p-0">
-      <CardHeader className="flex flex-col gap-3 p-6 pb-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <CardTitle>{data.selected_menu.label}</CardTitle>
-            <StatusChip variant={stageVariant(data.selected_menu.stage)}>
-              {data.selected_menu.stage}
-            </StatusChip>
-          </div>
-          <p className="mt-2 text-sm text-text-secondary">
-            {formatDate(data.period.start_date)} ถึง {formatDate(data.period.end_date)}
-          </p>
-        </div>
+      <CardHeader className="flex flex-row items-center justify-between gap-4 px-6 py-3.5">
+        <span className="text-sm font-semibold text-text-secondary">รายการเอกสาร</span>
         <StatusChip variant="neutral">{formatNumber(data.documents.length)} rows</StatusChip>
       </CardHeader>
       <CardContent className="p-0">
@@ -352,25 +332,25 @@ export function ApDashboard({ data }: ApDashboardProps) {
 
   return (
     <div className="space-y-4">
-      <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="label-caps text-text-tertiary">{data.company_name}</p>
-          <h1 className="font-display mt-2 text-[34px] leading-[42px] tracking-normal text-text-primary">
-            ระบบเจ้าหนี้
+      <section>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+            {data.selected_menu.label}
           </h1>
-          <p className="mt-3 text-sm text-text-secondary">
+          {data.selected_menu.stage ? (
+            <StatusChip variant={stageVariant(data.selected_menu.stage)}>
+              {data.selected_menu.stage}
+            </StatusChip>
+          ) : null}
+        </div>
+        <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-text-tertiary">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+          <span>
             {isSupplier
               ? "ข้อมูลหลักเจ้าหนี้"
               : `ช่วงเอกสาร ${formatDate(data.period.start_date)} ถึง ${formatDate(data.period.end_date)}`}
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <StatusChip variant="info">
-            <HandCoins className="h-3.5 w-3.5" aria-hidden="true" />
-            AP
-          </StatusChip>
-          <StatusChip variant="neutral">อ่านอย่างเดียว</StatusChip>
-        </div>
+          </span>
+        </p>
       </section>
 
       {isSupplier ? <SupplierFilter data={data} /> : <DocumentFilter data={data} />}
