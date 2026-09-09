@@ -46,6 +46,10 @@ DB_PORT=5432
 DB_NAME=smlerp
 DB_USER=postgres
 DB_PASSWORD=
+
+# Login page defaults (ERP provider code + preferred database code — get real values from the team)
+LOGIN_DEFAULT_PROVIDER_CODE=
+LOGIN_PREFERRED_DB_CODE=
 ```
 
 ### Run Dev
@@ -107,6 +111,10 @@ docker compose -f docker-compose.deploy.yml ps
 ```env
 SESSION_SECRET=your-secret-key-min-32-chars-here
 SESSION_COOKIE_SECURE=false
+
+# Login page defaults (ERP provider code + preferred database code — get real values from the team)
+LOGIN_DEFAULT_PROVIDER_CODE=
+LOGIN_PREFERRED_DB_CODE=
 ```
 
 > DB จะ connect ผ่าน network ไปยัง SMLERP server โดยตรง (ไม่ได้รัน PostgreSQL ใน container)

@@ -17,6 +17,8 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      LOGIN_DEFAULT_PROVIDER_CODE: ${LOGIN_DEFAULT_PROVIDER_CODE}
+      LOGIN_PREFERRED_DB_CODE: ${LOGIN_PREFERRED_DB_CODE}
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
       interval: 30s
