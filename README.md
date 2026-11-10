@@ -35,9 +35,12 @@ pnpm install
 
 สร้างไฟล์ `.env.local` ที่ root:
 
+> `SESSION_SECRET` ต้องยาวอย่างน้อย 32 ตัวอักษร (ระบบจะ throw error ตอนรัน production ถ้าสั้นกว่านั้น)
+> ให้สร้างค่าจริงด้วยคำสั่ง `openssl rand -hex 32` แล้ว copy ผลลัพธ์ทั้ง 64 ตัวอักษรไปใส่แทน — บน Windows รันผ่าน Git Bash หรือ WSL (PowerShell ปกติไม่มี openssl)
+
 ```env
-# Session secret (32+ chars)
-SESSION_SECRET=your-secret-key-here
+# Session secret (32+ chars) — สร้างค่าด้วย: openssl rand -hex 32
+SESSION_SECRET=<paste ผลลัพธ์จาก openssl rand -hex 32 ที่นี่>
 SESSION_COOKIE_SECURE=false
 
 # Default DB (optional — user เลือกได้ตอน login)
@@ -108,8 +111,12 @@ docker compose -f docker-compose.deploy.yml ps
 
 ### 1. สร้างไฟล์ `.env.production`
 
+> `SESSION_SECRET` ต้องยาวอย่างน้อย 32 ตัวอักษร (ระบบจะ throw error ตอนรัน production ถ้าสั้นกว่านั้น)
+> ให้สร้างค่าจริงด้วยคำสั่ง `openssl rand -hex 32` แล้ว copy ผลลัพธ์ทั้ง 64 ตัวอักษรไปใส่แทน — บน Windows รันผ่าน Git Bash หรือ WSL (PowerShell ปกติไม่มี openssl)
+
 ```env
-SESSION_SECRET=your-secret-key-min-32-chars-here
+# Session secret (32+ chars) — สร้างค่าด้วย: openssl rand -hex 32
+SESSION_SECRET=<paste ผลลัพธ์จาก openssl rand -hex 32 ที่นี่>
 SESSION_COOKIE_SECURE=false
 
 # Login page defaults (ERP provider code + preferred database code — get real values from the team)
