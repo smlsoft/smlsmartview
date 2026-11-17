@@ -62,13 +62,21 @@ export function safeRedirectPath(
     if (decoded === current) {
       // Fully decoded and every layer was safe. Final guard: resolving it
       // against a base must stay on that origin.
+      // Dot-segments ("/.//evil.com", "/%2e//evil.com", "/a/..//evil.com")
+      // normalise to a "//host" pathname, so return the NORMALISED form and
+      // reject any whose pathname starts with "//": the "exactly one leading
+      // /" invariant then holds for the value we actually hand back.
       try {
         const base = "http://login-redirect-check.invalid";
-        if (new URL(raw, base).origin !== base) return fallback;
+        const u = new URL(raw, base);
+        if (u.origin !== base) return fallback;
+        if (!u.pathname.startsWith("/") || u.pathname.startsWith("//")) {
+          return fallback;
+        }
+        return u.pathname + u.search + u.hash;
       } catch {
         return fallback;
       }
-      return raw;
     }
     current = decoded;
   }
