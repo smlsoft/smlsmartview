@@ -25,6 +25,7 @@ import { LoginAnimatedBackground } from "@/components/auth/LoginAnimatedBackgrou
 import { ThemeSelector } from "@/components/ui/theme-selector";
 import { useTheme } from "@/lib/theme-context";
 import type { Branch } from "@/lib/session";
+import { safeRedirectPath } from "./safe-redirect";
 
 type Step = "credentials" | "select-db";
 
@@ -45,7 +46,7 @@ function LoginInner({ defaultProviderCode, preferredDbCode }: LoginClientProps) 
   const router = useRouter();
   const params = useSearchParams();
   const { dark, toggleDark } = useTheme();
-  const redirectTo = params.get("from") || "/dashboard";
+  const redirectTo = safeRedirectPath(params.get("from"));
 
   const [step, setStep] = useState<Step>("credentials");
   const [provider, setProvider] = useState(defaultProviderCode);
