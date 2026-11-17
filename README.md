@@ -128,7 +128,7 @@ LOGIN_PREFERRED_DB_CODE=<รหัส db ตัวจริงของ producti
 
 > DB จะ connect ผ่าน network ไปยัง SMLERP server โดยตรง (ไม่ได้รัน PostgreSQL ใน container)
 > `SESSION_COOKIE_SECURE` ไม่ต้องตั้ง: ระบบตรวจโปรโตคอลที่ผู้ใช้เปิดเอง (HTTP เช่น `http://192.168.x.x:3618` ได้ cookie ปกติ; HTTPS หรือผ่าน reverse proxy ที่ส่ง `x-forwarded-proto: https` ได้ Secure cookie) — ตั้ง `true`/`false` เฉพาะเมื่อต้องการบังคับ
-> **Reverse proxy:** ถ้ารันหลัง reverse proxy (nginx, Caddy ฯลฯ) แอปใช้ header `x-forwarded-proto` (เลือก Secure cookie และ http/https ของ redirect) และ `x-forwarded-host` (host ที่ใช้ใน redirect ไปหน้า login; ถ้าไม่มีจะใช้ `Host`) — ให้ proxy ส่งสอง header นี้ และเขียนทับค่าที่ client ส่งมาเอง; ค่า host ที่ไม่ใช่ `host[:port]` ธรรมดาจะถูกเมินและใช้ค่าจาก Next แทน
+> **Reverse proxy:** ถ้ารันหลัง reverse proxy (nginx, Caddy ฯลฯ) แอปใช้ header `x-forwarded-proto` (เลือก Secure cookie และ http/https ของ redirect) — ให้ proxy ส่ง header นี้ และเขียนทับค่าที่ client ส่งมาเอง. การ redirect ไปหน้า login ปกติ (`HOSTNAME=0.0.0.0` ตาม Dockerfile) เป็น relative จึงใช้ได้หลัง proxy ทุกแบบ; เฉพาะเมื่อ bind แบบ loopback (`HOSTNAME=127.0.0.1`, `next start -H 127.0.0.1`) แอปจะสร้าง redirect จาก `x-forwarded-host` (ถ้าไม่มีใช้ `Host`) แทน `localhost` — กรณีนี้ให้ proxy ส่ง `X-Forwarded-Host` และ `X-Forwarded-Proto` ด้วย; ค่า host ที่ไม่ใช่ `host[:port]` ธรรมดาจะถูกเมิน
 
 ### 2. Build image
 
