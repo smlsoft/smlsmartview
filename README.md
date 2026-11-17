@@ -46,9 +46,9 @@ SESSION_COOKIE_SECURE=false
 # Default DB (optional — user เลือกได้ตอน login)
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=smlerp
-DB_USER=postgres
-DB_PASSWORD=
+DB_NAME=data1
+DB_USER=smlai
+DB_PASSWORD=ai2026
 
 # Login page defaults (ERP provider code + preferred database code — get real values from the team)
 LOGIN_DEFAULT_PROVIDER_CODE=<รหัสผู้ให้บริการ ตอนเข้าหน้าโปรแกรม SML>
