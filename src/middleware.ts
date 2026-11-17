@@ -21,6 +21,8 @@ export async function middleware(req: NextRequest) {
   }
 
   const res = NextResponse.next();
+  // Read-only: the middleware never saves/destroys the session, so the static
+  // sessionOptions (and its `secure` value) never produces a Set-Cookie here.
   const session = await getIronSession<SessionData>(req, res, sessionOptions);
 
   if (!session.isLoggedIn) {
