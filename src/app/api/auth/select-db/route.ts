@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const session = await getSession();
+  const session = await getSession(req);
   if (!session.user_code) {
     return NextResponse.json(
       { error: "Login step 1 has not completed" },

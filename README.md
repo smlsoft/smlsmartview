@@ -41,14 +41,15 @@ pnpm install
 ```env
 # Session secret (32+ chars) — สร้างค่าด้วย: openssl rand -hex 32
 SESSION_SECRET=<paste ผลลัพธ์จาก openssl rand -hex 32 ที่นี่>
-SESSION_COOKIE_SECURE=false
+# Optional (ปกติไม่ต้องตั้ง): ระบบเลือก Secure cookie ให้เองตามโปรโตคอล http/https ที่ผู้ใช้เปิด
+# SESSION_COOKIE_SECURE=true
 
 # Default DB (optional — user เลือกได้ตอน login)
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=data1
-DB_USER=smlai
-DB_PASSWORD=ai2026
+DB_NAME=smlerp
+DB_USER=postgres
+DB_PASSWORD=
 
 # Login page defaults (ERP provider code + preferred database code — get real values from the team)
 LOGIN_DEFAULT_PROVIDER_CODE=<รหัสผู้ให้บริการ ตอนเข้าหน้าโปรแกรม SML>
@@ -117,7 +118,8 @@ docker compose -f docker-compose.deploy.yml ps
 ```env
 # Session secret (32+ chars) — สร้างค่าด้วย: openssl rand -hex 32
 SESSION_SECRET=<paste ผลลัพธ์จาก openssl rand -hex 32 ที่นี่>
-SESSION_COOKIE_SECURE=false
+# Optional (ปกติไม่ต้องตั้ง): ระบบเลือก Secure cookie ให้เองตามโปรโตคอล http/https ที่ผู้ใช้เปิด
+# SESSION_COOKIE_SECURE=true
 
 # Login page defaults (ERP provider code + preferred database code — get real values from the team)
 LOGIN_DEFAULT_PROVIDER_CODE=<รหัสผู้ให้บริการ ตอนเข้าหน้าโปรแกรม SML>
@@ -125,7 +127,7 @@ LOGIN_PREFERRED_DB_CODE=<รหัส db ตัวจริงของ producti
 ```
 
 > DB จะ connect ผ่าน network ไปยัง SMLERP server โดยตรง (ไม่ได้รัน PostgreSQL ใน container)
-> ถ้าเปิดผ่าน HTTPS ให้ตั้ง `SESSION_COOKIE_SECURE=true`; ถ้าเปิดผ่าน HTTP ใน LAN เช่น `http://192.168.x.x:3618` ให้ใช้ `false`
+> `SESSION_COOKIE_SECURE` ไม่ต้องตั้ง: ระบบตรวจโปรโตคอลที่ผู้ใช้เปิดเอง (HTTP เช่น `http://192.168.x.x:3618` ได้ cookie ปกติ; HTTPS หรือผ่าน reverse proxy ที่ส่ง `x-forwarded-proto: https` ได้ Secure cookie) — ตั้ง `true`/`false` เฉพาะเมื่อต้องการบังคับ
 
 ### 2. Build image
 

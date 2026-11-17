@@ -139,7 +139,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
-  const session = await getSession();
+  const session = await getSession(req);
   session.provider_code = user.provider_code;
   session.user_code = user.user_code;
   session.user_name = user.user_name;

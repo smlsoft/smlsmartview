@@ -14,7 +14,8 @@ services:
     environment:
       NODE_ENV: production
       SESSION_SECRET: ${SESSION_SECRET}
-      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      # Optional override (true/false). Empty/unset = auto-detect http/https per request.
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_NAME: ${DB_NAME}
