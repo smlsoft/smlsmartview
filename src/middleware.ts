@@ -52,14 +52,23 @@ export async function middleware(req: NextRequest) {
   if (!session.isLoggedIn) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";
-    const host = requestHost(req);
-    if (host) {
-      // Clear the port first: a port-less host would otherwise keep Next's port.
-      url.port = "";
-      url.host = host;
+    // Only override when Next's own URL is the loopback rewrite (server bound
+    // to 127.0.0.1 / ::1). In every other case leave it untouched: Next then
+    // turns the Location into a relative one, which works behind any proxy
+    // (including ones that rewrite Host to an internal upstream name).
+    if (url.hostname === "localhost") {
+      const host = requestHost(req);
+      if (host) {
+        // Clear the port first: a port-less host would otherwise keep Next's port.
+        url.port = "";
+        url.host = host;
+      }
     }
     url.searchParams.set("from", pathname);
-    return NextResponse.redirect(url);
+    const redirect = NextResponse.redirect(url);
+    // The target depends on request headers, so it must never be cached.
+    redirect.headers.set("Cache-Control", "no-store");
+    return redirect;
   }
 
   return res;
